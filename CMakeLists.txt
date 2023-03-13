@@ -15,18 +15,30 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-include_directories(include)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 
-# add_library(unitree_ros src/unitree_ros.cpp)
+# Include unitree_legged_sdk
+if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "x86_64.*")
+  set(ARCH amd64)
+else()
+  set(ARCH arm64)
+endif()
+
+link_directories(${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/lib/cpp/${ARCH})
+set(EXTRA_LIBS -pthread libunitree_legged_sdk.so)
+set(CMAKE_CXX_FLAGS "-O3 -fPIC")
+
+include_directories(include ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include)
 
 add_executable(unitree_ros src/unitree_ros_node.cpp)
+target_link_libraries(unitree_ros ${EXTRA_LIBS})
 ament_target_dependencies(unitree_ros rclcpp std_msgs)
 
 install(
   DIRECTORY include/unitree_ros
+  DIRECTORY include/unitree_legged_sdk
   DESTINATION include
 )
 
@@ -36,5 +48,6 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
   INCLUDES DESTINATION include
 )
+
 
 ament_package()

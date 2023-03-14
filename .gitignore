@@ -52,6 +52,7 @@ CATKIN_IGNORE
 
 # Clangd
 .cache
+compile_commands.json
 
 # VSCode
 .vscode

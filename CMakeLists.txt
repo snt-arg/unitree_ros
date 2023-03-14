@@ -30,15 +30,16 @@ link_directories(${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/lib/cpp/${ARCH})
 set(EXTRA_LIBS -pthread libunitree_legged_sdk.so)
 set(CMAKE_CXX_FLAGS "-O3 -fPIC")
 
-include_directories(include ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include)
+include_directories(include 
+                   ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include)
 
 add_executable(unitree_ros src/unitree_ros_node.cpp)
 target_link_libraries(unitree_ros ${EXTRA_LIBS})
 ament_target_dependencies(unitree_ros rclcpp std_msgs)
 
 install(
-  DIRECTORY include/unitree_ros
-  DIRECTORY include/unitree_legged_sdk
+  DIRECTORY include
+  DIRECTORY  ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include
   DESTINATION include
 )
 
@@ -48,6 +49,5 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
   INCLUDES DESTINATION include
 )
-
 
 ament_package()

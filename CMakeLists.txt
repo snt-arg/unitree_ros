@@ -16,10 +16,19 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 
+find_package(rosidl_default_generators REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
-# Include unitree_legged_sdk
+# ------------------------------
+# - External Libraries Section -
+# ------------------------------
+
+# unitree_legged_sdk Library
 if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "x86_64.*")
   set(ARCH amd64)
 else()
@@ -33,9 +42,39 @@ set(CMAKE_CXX_FLAGS "-O3 -fPIC")
 include_directories(include 
                    ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include)
 
-add_executable(unitree_ros src/unitree_ros_node.cpp)
-target_link_libraries(unitree_ros ${EXTRA_LIBS})
-ament_target_dependencies(unitree_ros rclcpp std_msgs)
+
+# --------------------------------
+# - Message Generatation Section -
+# --------------------------------
+              
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/MotorState.msg"
+  "msg/BmsState.msg"
+  "msg/BmsCmd.msg"
+  "msg/Cartesian.msg"
+  "msg/IMU.msg"
+  "msg/LED.msg"
+  "msg/HighCmd.msg"
+  "msg/HighState.msg"
+  DEPENDENCIES builtin_interfaces std_msgs geometry_msgs sensor_msgs nav_msgs
+)
+
+# -----------------------
+# - Build Section -
+# -----------------------
+
+set(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs)
+
+add_executable(unitree_driver_node src/unitree_ros_node.cpp)
+target_link_libraries(unitree_driver_node ${EXTRA_LIBS})
+ament_target_dependencies(unitree_driver_node ${DEPENDENCIES})
+rosidl_target_interfaces(unitree_driver_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
+
+
+# -------------------
+# - Install Section -
+# -------------------
 
 install(
   DIRECTORY include
@@ -45,7 +84,7 @@ install(
 
 
 install(TARGETS 
-  unitree_ros 
+  unitree_driver_node
   DESTINATION lib/${PROJECT_NAME}
   INCLUDES DESTINATION include
 )

@@ -65,10 +65,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 set(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs)
 
-add_executable(unitree_driver_node src/unitree_ros_node.cpp)
-target_link_libraries(unitree_driver_node ${EXTRA_LIBS})
-ament_target_dependencies(unitree_driver_node ${DEPENDENCIES})
-rosidl_target_interfaces(unitree_driver_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
+add_executable(unitree_driver src/unitree_ros_node.cpp src/unitree_driver_ros.cpp)
+target_link_libraries(unitree_driver ${EXTRA_LIBS})
+ament_target_dependencies(unitree_driver ${DEPENDENCIES})
+rosidl_target_interfaces(unitree_driver ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
 
 
@@ -77,14 +77,18 @@ rosidl_target_interfaces(unitree_driver_node ${PROJECT_NAME} "rosidl_typesupport
 # -------------------
 
 install(
-  DIRECTORY include
-  DIRECTORY  ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include
+  DIRECTORY include  ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include
   DESTINATION include
+)
+
+install(
+  DIRECTORY config launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 
 install(TARGETS 
-  unitree_driver_node
+  unitree_driver
   DESTINATION lib/${PROJECT_NAME}
   INCLUDES DESTINATION include
 )

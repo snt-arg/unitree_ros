@@ -11,16 +11,14 @@ using namespace std::chrono_literals;
 
 UnitreeDriverRos::UnitreeDriverRos()
     : Node("unitree_driver_node"),
-      robot_ip("192.168.12.1"),
-      robot_local_port(8090),
-      robot_target_port(8082),
-      robotUDPConnection(UNITREE_LEGGED_SDK::HIGHLEVEL,
-                         robot_local_port,
+      robotUDPConnection(robot_local_port,
                          robot_ip.c_str(),
-                         robot_target_port) {
+                         robot_target_port,
+                         sizeof(robotHighCmd),
+                         sizeof(robotHighState)) {
     readParams();
 
-    robotUDPConnection.SetIpPort(robot_ip.c_str(), robot_target_port);
+    /* robotUDPConnection.SetIpPort(robot_ip.c_str(), robot_target_port); */
     robotUDPConnection.InitCmdData(robotHighCmd);
 
     cmdVelSub = create_subscription<geometry_msgs::msg::Twist>(
@@ -28,11 +26,13 @@ UnitreeDriverRos::UnitreeDriverRos()
         10,
         std::bind(&UnitreeDriverRos::cmdVelCallback, this, std::placeholders::_1));
 
+    imuPub = create_publisher<sensor_msgs::msg::Imu>(imu_topic_name, 10);
+    odomPub = create_publisher<nav_msgs::msg::Odometry>(odometry_topic_name, 10);
+
     robotStateTimer = create_wall_timer(
         50ms, std::bind(&UnitreeDriverRos::robotStateTimerCallback, this));
 
-    imuPub = create_publisher<sensor_msgs::msg::Imu>(imu_topic_name, 10);
-    odomPub = create_publisher<nav_msgs::msg::Odometry>(odometry_topic_name, 10);
+    RCLCPP_INFO(get_logger(), "Node is alive");
 }
 
 void UnitreeDriverRos::readParams() {
@@ -51,14 +51,14 @@ void UnitreeDriverRos::readParams() {
     get_parameter("cmd_vel_topic_name", cmd_vel_topic_name);
     get_parameter("odometry_topic_name", odometry_topic_name);
     get_parameter("imu_topic_name", imu_topic_name);
-    RCLCPP_INFO(get_logger(), "topic %s", cmd_vel_topic_name.c_str());
 
     RCLCPP_INFO(get_logger(), "Finished reading parameters!");
 }
 
 void UnitreeDriverRos::robotStateTimerCallback() {
     // Receive state from robot
-    robotUDPConnection.Recv();
+    int rec = robotUDPConnection.Recv();
+    RCLCPP_INFO(get_logger(), "Received: %d", rec);
     robotUDPConnection.GetRecv(robotHighState);
 
     sensor_msgs::msg::Imu imuState;

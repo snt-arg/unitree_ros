@@ -20,6 +20,8 @@ UnitreeDriverRos::UnitreeDriverRos()
 
     /* robotUDPConnection.SetIpPort(robot_ip.c_str(), robot_target_port); */
     robotUDPConnection.InitCmdData(robotHighCmd);
+    robotHighState =
+        (UNITREE_LEGGED_SDK::HighState*)malloc(UNITREE_LEGGED_SDK::HIGH_STATE_LENGTH);
 
     cmdVelSub = create_subscription<geometry_msgs::msg::Twist>(
         cmd_vel_topic_name,
@@ -57,9 +59,9 @@ void UnitreeDriverRos::readParams() {
 
 void UnitreeDriverRos::robotStateTimerCallback() {
     // Receive state from robot
-    int rec = robotUDPConnection.Recv();
-    RCLCPP_INFO(get_logger(), "Received: %d", rec);
-    robotUDPConnection.GetRecv(robotHighState);
+    int recv = robotUDPConnection.Recv();
+    RCLCPP_INFO(get_logger(), "Received: %d", recv);
+    robotUDPConnection.GetRecv(*robotHighState);
 
     sensor_msgs::msg::Imu imuState;
     nav_msgs::msg::Odometry odometryState;
@@ -67,32 +69,32 @@ void UnitreeDriverRos::robotStateTimerCallback() {
 
     // TODO: missing the frame_id
     imuState.header.stamp = now;
-    imuState.orientation.x = robotHighState.imu.quaternion[0];
-    imuState.orientation.y = robotHighState.imu.quaternion[1];
-    imuState.orientation.z = robotHighState.imu.quaternion[2];
-    imuState.orientation.w = robotHighState.imu.quaternion[3];
-    imuState.linear_acceleration.x = robotHighState.imu.accelerometer[0];
-    imuState.linear_acceleration.y = robotHighState.imu.accelerometer[1];
-    imuState.linear_acceleration.z = robotHighState.imu.accelerometer[2];
-    imuState.angular_velocity.x = robotHighState.imu.gyroscope[0];
-    imuState.angular_velocity.y = robotHighState.imu.gyroscope[1];
-    imuState.angular_velocity.z = robotHighState.imu.gyroscope[2];
+    imuState.orientation.x = robotHighState->imu.quaternion[0];
+    imuState.orientation.y = robotHighState->imu.quaternion[1];
+    imuState.orientation.z = robotHighState->imu.quaternion[2];
+    imuState.orientation.w = robotHighState->imu.quaternion[3];
+    imuState.linear_acceleration.x = robotHighState->imu.accelerometer[0];
+    imuState.linear_acceleration.y = robotHighState->imu.accelerometer[1];
+    imuState.linear_acceleration.z = robotHighState->imu.accelerometer[2];
+    imuState.angular_velocity.x = robotHighState->imu.gyroscope[0];
+    imuState.angular_velocity.y = robotHighState->imu.gyroscope[1];
+    imuState.angular_velocity.z = robotHighState->imu.gyroscope[2];
 
     // TODO: missing the frame_id
-    odometryState.header.stamp = now;
-    odometryState.twist.twist.linear.x = robotHighState.velocity[0];
-    odometryState.twist.twist.linear.y = robotHighState.velocity[1];
-    odometryState.twist.twist.linear.z = robotHighState.velocity[2];
-    odometryState.twist.twist.angular.z = robotHighState.yawSpeed;
-    odometryState.pose.pose.position.x = robotHighState.position[0];
-    odometryState.pose.pose.position.y = robotHighState.position[1];
-    odometryState.pose.pose.position.z = robotHighState.position[2];
-    odometryState.pose.pose.orientation.x = robotHighState.imu.quaternion[0];
-    odometryState.pose.pose.orientation.y = robotHighState.imu.quaternion[1];
-    odometryState.pose.pose.orientation.z = robotHighState.imu.quaternion[2];
-    odometryState.pose.pose.orientation.w = robotHighState.imu.quaternion[3];
+    /* odometryState.header.stamp = now; */
+    /* odometryState.twist.twist.linear.x = robotHighState.velocity[0]; */
+    /* odometryState.twist.twist.linear.y = robotHighState.velocity[1]; */
+    /* odometryState.twist.twist.linear.z = robotHighState.velocity[2]; */
+    /* odometryState.twist.twist.angular.z = robotHighState.yawSpeed; */
+    /* odometryState.pose.pose.position.x = robotHighState.position[0]; */
+    /* odometryState.pose.pose.position.y = robotHighState.position[1]; */
+    /* odometryState.pose.pose.position.z = robotHighState.position[2]; */
+    /* odometryState.pose.pose.orientation.x = robotHighState.imu.quaternion[0]; */
+    /* odometryState.pose.pose.orientation.y = robotHighState.imu.quaternion[1]; */
+    /* odometryState.pose.pose.orientation.z = robotHighState.imu.quaternion[2]; */
+    /* odometryState.pose.pose.orientation.w = robotHighState.imu.quaternion[3]; */
 
-    odomPub->publish(odometryState);
+    /* odomPub->publish(odometryState); */
     imuPub->publish(imuState);
 }
 

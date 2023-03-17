@@ -25,7 +25,7 @@ class UnitreeDriverRos : public rclcpp::Node {
     // Unitree High Command struct
     UNITREE_LEGGED_SDK::HighCmd robotHighCmd = {};
     // Unitree High State struct
-    UNITREE_LEGGED_SDK::HighState robotHighState = {};
+    UNITREE_LEGGED_SDK::HighState *robotHighState;
 
    private:
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odomPub;

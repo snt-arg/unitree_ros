@@ -1,11 +1,6 @@
 #include "unitree_ros/unitree_driver_ros.hpp"
 
-#include "unitree_ros/conversion.hpp"
-
 using namespace std::chrono_literals;
-
-// TODO:
-//  [] publish the battery state
 
 UnitreeDriverRos::UnitreeDriverRos()
     : Node("unitree_driver_node"),
@@ -27,6 +22,8 @@ UnitreeDriverRos::UnitreeDriverRos()
 
     imuPub = create_publisher<sensor_msgs::msg::Imu>(imuTopicName, 10);
     odomPub = create_publisher<nav_msgs::msg::Odometry>(odometryTopicName, 10);
+    batteryStatePub =
+        create_publisher<unitree_ros::msg::BmsState>(bmsStateTopicName, 10);
 
     robotStateTimer = create_wall_timer(
         50ms, std::bind(&UnitreeDriverRos::robotStateTimerCallback, this));
@@ -44,6 +41,7 @@ void UnitreeDriverRos::readParams() {
     declare_parameter<std::string>("odometry_frame_id", "Odometry");
     declare_parameter<std::string>("imu_topic_name", "/imu");
     declare_parameter<std::string>("imu_frame_id", "IMU");
+    declare_parameter<std::string>("bms_state_topic_name", "/bms_state");
 
     get_parameter("robot_ip", robotIP);
     get_parameter("robot_target_port", robotTargetPort);
@@ -52,12 +50,14 @@ void UnitreeDriverRos::readParams() {
     get_parameter("odometry_frame_id", odometryFrameId);
     get_parameter("imu_topic_name", imuTopicName);
     get_parameter("imu_frame_id", imuFrameId);
+    get_parameter("bms_state_topic_name", bmsStateTopicName);
 
     RCLCPP_INFO(get_logger(), "Finished reading ROS parameters!");
 }
 
 void UnitreeDriverRos::robotStateTimerCallback() {
     // Receive state from robot
+    robotUDPConnection.Send();
     robotUDPConnection.Recv();
     robotUDPConnection.GetRecv(robotHighState);
 
@@ -66,9 +66,12 @@ void UnitreeDriverRos::robotStateTimerCallback() {
     sensor_msgs::msg::Imu imuStateMsg = generateImuMsg(robotHighState, now, imuFrameId);
     nav_msgs::msg::Odometry odometryStateMsg =
         generateOdometryMsg(robotHighState, now, odometryFrameId);
+    unitree_ros::msg::BmsState batteryStateMsg =
+        generateBatteryStateMsg(robotHighState);
 
     odomPub->publish(odometryStateMsg);
     imuPub->publish(imuStateMsg);
+    batteryStatePub->publish(batteryStateMsg);
 }
 
 void UnitreeDriverRos::cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg) {

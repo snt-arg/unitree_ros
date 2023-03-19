@@ -3,18 +3,15 @@
 
 #include <unitree_legged_sdk/unitree_legged_sdk.h>
 
-#include <nav_msgs/msg/detail/odometry__struct.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 // Ros Messages
 #include <geometry_msgs/msg/twist.hpp>
 #include <nav_msgs/msg/odometry.hpp>
-#include <sensor_msgs/msg/detail/imu__struct.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <unitree_ros/msg/bms_cmd.hpp>
+#include <unitree_ros/msg/bms_state.hpp>
 #include <unitree_ros/msg/high_cmd.hpp>
-
-#include "unitree_legged_sdk/comm.h"
 
 /**
  * @brief Update the high level command from a Twist message to send to robot
@@ -111,6 +108,22 @@ inline nav_msgs::msg::Odometry generateOdometryMsg(
     odometryStateMsg.pose.pose.orientation.w = highState.imu.quaternion[3];
 
     return odometryStateMsg;
+}
+
+inline unitree_ros::msg::BmsState generateBatteryStateMsg(
+    UNITREE_LEGGED_SDK::HighState &highState) {
+    unitree_ros::msg::BmsState msg;
+    msg.soc = highState.bms.SOC;
+    msg.cycle = highState.bms.cycle;
+    msg.bq_ntc = highState.bms.BQ_NTC;
+    msg.current = highState.bms.current;
+    msg.mcu_ntc = highState.bms.MCU_NTC;
+    msg.cell_vol = highState.bms.cell_vol;
+    msg.version_h = highState.bms.version_h;
+    msg.version_l = highState.bms.version_l;
+    msg.bms_status = highState.bms.bms_status;
+
+    return msg;
 }
 
 #endif  // !CONVERSION_HPP

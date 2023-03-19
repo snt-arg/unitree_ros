@@ -20,6 +20,7 @@ class UnitreeDriverRos : public rclcpp::Node {
     std::string odometryFrameId = "Odometry";
     std::string imuTopicName = "/imu";
     std::string imuFrameId = "IMU";
+    std::string bmsStateTopicName = "/bms_state";
     std::string robotIP = "192.168.12.1";
     int robotLocalPort = 8090;
     int robotTargetPort = 8082;

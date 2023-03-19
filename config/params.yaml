@@ -7,3 +7,4 @@ unitree_driver_node:
     odometry_frame_id: "Odometry"
     imu_topic_name: "/imu"
     imu_frame_id: "IMU"
+    bms_state_topic_name: "/bms_state"

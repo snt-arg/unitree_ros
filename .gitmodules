@@ -1,4 +1,4 @@
 [submodule "utils/unitree_legged_sdk"]
 	path = utils/unitree_legged_sdk
 	url = git@github.com:unitreerobotics/unitree_legged_sdk.git
-	branch = master
+	branch = v3.8.0

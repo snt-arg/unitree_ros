@@ -1,5 +1,9 @@
 #include "unitree_ros/unitree_driver_ros.hpp"
 
+#include <rclcpp/utilities.hpp>
+
+#include "unitree_legged_sdk/comm.h"
+
 using namespace std::chrono_literals;
 
 UnitreeDriverRos::UnitreeDriverRos()
@@ -63,11 +67,9 @@ void UnitreeDriverRos::robotStateTimerCallback() {
 
     rclcpp::Time now = this->get_clock()->now();
 
-    sensor_msgs::msg::Imu imuStateMsg = generateImuMsg(robotHighState, now, imuFrameId);
-    nav_msgs::msg::Odometry odometryStateMsg =
-        generateOdometryMsg(robotHighState, now, odometryFrameId);
-    unitree_ros::msg::BmsState batteryStateMsg =
-        generateBatteryStateMsg(robotHighState);
+    auto imuStateMsg = generateImuMsg(robotHighState, now, imuFrameId);
+    auto odometryStateMsg = generateOdometryMsg(robotHighState, now, odometryFrameId);
+    auto batteryStateMsg = generateBatteryStateMsg(robotHighState);
 
     odomPub->publish(odometryStateMsg);
     imuPub->publish(imuStateMsg);
@@ -78,5 +80,12 @@ void UnitreeDriverRos::cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr
     robotHighCmd = rosMsg2Cmd(msg);
     robotUDPConnection.SetSend(robotHighCmd);
     robotUDPConnection.Send();
-    RCLCPP_INFO(get_logger(), "Received cmd");
+    RCLCPP_INFO(get_logger(), "Cmd received!");
+
+    rclcpp::sleep_for(250ms);
+    UNITREE_LEGGED_SDK::HighCmd cmd = {};
+    robotUDPConnection.SetSend(cmd);
+    robotUDPConnection.Send();
+
+    RCLCPP_INFO(get_logger(), "Timeout Triggered");
 }

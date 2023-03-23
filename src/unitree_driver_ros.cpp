@@ -30,7 +30,7 @@ UnitreeDriverRos::UnitreeDriverRos()
         create_publisher<unitree_ros::msg::BmsState>(bmsStateTopicName, 10);
 
     robotStateTimer = create_wall_timer(
-        50ms, std::bind(&UnitreeDriverRos::robotStateTimerCallback, this));
+        2ms, std::bind(&UnitreeDriverRos::robotStateTimerCallback, this));
 
     RCLCPP_INFO(get_logger(), "Unitree Driver Node is ready!");
 }
@@ -38,23 +38,32 @@ UnitreeDriverRos::UnitreeDriverRos()
 void UnitreeDriverRos::readParams() {
     RCLCPP_INFO(get_logger(), "Reading ROS parameters...");
 
+    // Robot params
     declare_parameter<std::string>("robot_ip", "192.168.12.1");
     declare_parameter<int>("robot_target_port", 8082);
-    declare_parameter<std::string>("cmd_vel_topic_name", "cmd_vel");
-    declare_parameter<std::string>("odometry_topic_name", "/odom");
-    declare_parameter<std::string>("odometry_frame_id", "Odometry");
-    declare_parameter<std::string>("imu_topic_name", "/imu");
-    declare_parameter<std::string>("imu_frame_id", "IMU");
-    declare_parameter<std::string>("bms_state_topic_name", "/bms_state");
-
+    // --------------------------------------------------------
     get_parameter("robot_ip", robotIP);
     get_parameter("robot_target_port", robotTargetPort);
+
+    // Topic Names
+    declare_parameter<std::string>("cmd_vel_topic_name", "cmd_vel");
+    declare_parameter<std::string>("imu_topic_name", "/imu");
+    declare_parameter<std::string>("odometry_topic_name", "/odom");
+    declare_parameter<std::string>("bms_state_topic_name", "/bms_state");
+    // --------------------------------------------------------
     get_parameter("cmd_vel_topic_name", cmdVelTopicName);
     get_parameter("odometry_topic_name", odometryTopicName);
-    get_parameter("odometry_frame_id", odometryFrameId);
     get_parameter("imu_topic_name", imuTopicName);
-    get_parameter("imu_frame_id", imuFrameId);
     get_parameter("bms_state_topic_name", bmsStateTopicName);
+
+    // Frame Ids
+    declare_parameter<std::string>("imu_frame_id", "IMU");
+    declare_parameter<std::string>("odometry_frame_id", "map");
+    declare_parameter<std::string>("odometry_child_frame_id", "odom");
+    // --------------------------------------------------------
+    get_parameter("odometry_frame_id", odometryFrameId);
+    get_parameter("odometry_child_frame_id", odometryChildFrameId);
+    get_parameter("imu_frame_id", imuFrameId);
 
     RCLCPP_INFO(get_logger(), "Finished reading ROS parameters!");
 }
@@ -68,7 +77,8 @@ void UnitreeDriverRos::robotStateTimerCallback() {
     rclcpp::Time now = this->get_clock()->now();
 
     auto imuStateMsg = generateImuMsg(robotHighState, now, imuFrameId);
-    auto odometryStateMsg = generateOdometryMsg(robotHighState, now, odometryFrameId);
+    auto odometryStateMsg =
+        generateOdometryMsg(robotHighState, now, odometryFrameId, odometryChildFrameId);
     auto batteryStateMsg = generateBatteryStateMsg(robotHighState);
 
     odomPub->publish(odometryStateMsg);
@@ -80,12 +90,9 @@ void UnitreeDriverRos::cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr
     robotHighCmd = rosMsg2Cmd(msg);
     robotUDPConnection.SetSend(robotHighCmd);
     robotUDPConnection.Send();
-    RCLCPP_INFO(get_logger(), "Cmd received!");
 
-    rclcpp::sleep_for(250ms);
+    // Send an empty command to prevent the robot from moving continuously
+    rclcpp::sleep_for(50ms);
     UNITREE_LEGGED_SDK::HighCmd cmd = {};
     robotUDPConnection.SetSend(cmd);
-    robotUDPConnection.Send();
-
-    RCLCPP_INFO(get_logger(), "Timeout Triggered");
 }

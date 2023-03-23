@@ -13,26 +13,28 @@
 #include <unitree_ros/msg/bms_state.hpp>
 
 class UnitreeDriverRos : public rclcpp::Node {
-    // Parameters
+    // Topic Names
    private:
     std::string cmdVelTopicName = "/cmd_vel";
     std::string odometryTopicName = "/odom";
-    std::string odometryFrameId = "Odometry";
     std::string imuTopicName = "/imu";
-    std::string imuFrameId = "IMU";
     std::string bmsStateTopicName = "/bms_state";
-    std::string robotIP = "192.168.12.1";
-    int robotLocalPort = 8090;
-    int robotTargetPort = 8082;
 
-    // Unitree Related
-   public:
+    // Frame Ids
+   private:
+    std::string odometryFrameId = "map";
+    std::string odometryChildFrameId = "odom";
+    std::string imuFrameId = "IMU";
+
+    // Robot Related
+   private:
     // UDP connection used for High level commands
     UNITREE_LEGGED_SDK::UDP robotUDPConnection;
-    // Unitree High Command struct
     UNITREE_LEGGED_SDK::HighCmd robotHighCmd = {};
-    // Unitree High State struct
     UNITREE_LEGGED_SDK::HighState robotHighState = {};
+    int robotLocalPort = 8090;
+    int robotTargetPort = 8082;
+    std::string robotIP = "192.168.12.1";
 
     // Publishers
    private:

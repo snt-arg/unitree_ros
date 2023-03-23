@@ -65,16 +65,20 @@ inline sensor_msgs::msg::Imu generateImuMsg(UNITREE_LEGGED_SDK::HighState &highS
 
     imuStateMsg.header.frame_id = frame_id;
     imuStateMsg.header.stamp = now;
+
     imuStateMsg.orientation.x = highState.imu.quaternion[0];
     imuStateMsg.orientation.y = highState.imu.quaternion[1];
     imuStateMsg.orientation.z = highState.imu.quaternion[2];
     imuStateMsg.orientation.w = highState.imu.quaternion[3];
+
     imuStateMsg.linear_acceleration.x = highState.imu.accelerometer[0];
     imuStateMsg.linear_acceleration.y = highState.imu.accelerometer[1];
     imuStateMsg.linear_acceleration.z = highState.imu.accelerometer[2];
+
     imuStateMsg.angular_velocity.x = highState.imu.gyroscope[0];
     imuStateMsg.angular_velocity.y = highState.imu.gyroscope[1];
     imuStateMsg.angular_velocity.z = highState.imu.gyroscope[2];
+
     return imuStateMsg;
 }
 
@@ -84,24 +88,30 @@ inline sensor_msgs::msg::Imu generateImuMsg(UNITREE_LEGGED_SDK::HighState &highS
  * @param highState: high state struct received from robot
  * @param now: time stamp of the message
  * @param frame_id: frame id of the message
+ * @param childFrameId: child frame id of the message
  *
  * @return odometry message
  */
 inline nav_msgs::msg::Odometry generateOdometryMsg(
     UNITREE_LEGGED_SDK::HighState &highState,
     rclcpp::Time now,
-    std::string frame_id) {
+    std::string frameId,
+    std::string childFrameId) {
     nav_msgs::msg::Odometry odometryStateMsg;
 
-    odometryStateMsg.header.frame_id = frame_id;
+    odometryStateMsg.child_frame_id = childFrameId;
+    odometryStateMsg.header.frame_id = frameId;
     odometryStateMsg.header.stamp = now;
+
     odometryStateMsg.twist.twist.linear.x = highState.velocity[0];
     odometryStateMsg.twist.twist.linear.y = highState.velocity[1];
     odometryStateMsg.twist.twist.linear.z = highState.velocity[2];
     odometryStateMsg.twist.twist.angular.z = highState.yawSpeed;
+
     odometryStateMsg.pose.pose.position.x = highState.position[0];
     odometryStateMsg.pose.pose.position.y = highState.position[1];
     odometryStateMsg.pose.pose.position.z = highState.position[2];
+
     odometryStateMsg.pose.pose.orientation.x = highState.imu.quaternion[0];
     odometryStateMsg.pose.pose.orientation.y = highState.imu.quaternion[1];
     odometryStateMsg.pose.pose.orientation.z = highState.imu.quaternion[2];
@@ -113,6 +123,7 @@ inline nav_msgs::msg::Odometry generateOdometryMsg(
 inline unitree_ros::msg::BmsState generateBatteryStateMsg(
     UNITREE_LEGGED_SDK::HighState &highState) {
     unitree_ros::msg::BmsState msg;
+
     msg.soc = highState.bms.SOC;
     msg.cycle = highState.bms.cycle;
     msg.bq_ntc = highState.bms.BQ_NTC;

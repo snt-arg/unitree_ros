@@ -1,10 +1,14 @@
 unitree_driver_node:
   ros__parameters:
+    # Robot parameters
     robot_ip: "192.168.12.1"
     robot_target_port: 8082
+    # Topic names
     cmd_vel_topic_name: "/cmd_vel"
     odometry_topic_name: "/odom"
-    odometry_frame_id: "Odometry"
     imu_topic_name: "/imu"
-    imu_frame_id: "IMU"
     bms_state_topic_name: "/bms_state"
+    # Frame Ids
+    imu_frame_id: "IMU"
+    odometry_frame_id: "map"
+    odometry_child_frame_id: "odom"

@@ -1,5 +1,6 @@
 #include "unitree_ros/unitree_driver_ros.hpp"
 
+#include <rclcpp/clock.hpp>
 #include <rclcpp/utilities.hpp>
 
 #include "unitree_legged_sdk/comm.h"
@@ -31,6 +32,9 @@ UnitreeDriverRos::UnitreeDriverRos()
 
     robotStateTimer = create_wall_timer(
         2ms, std::bind(&UnitreeDriverRos::robotStateTimerCallback, this));
+
+    cmdVelResetTimer = create_wall_timer(
+        1ms, std::bind(&UnitreeDriverRos::cmdVelResetTimerCallback, this));
 
     RCLCPP_INFO(get_logger(), "Unitree Driver Node is ready!");
 }
@@ -91,8 +95,17 @@ void UnitreeDriverRos::cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr
     robotUDPConnection.SetSend(robotHighCmd);
     robotUDPConnection.Send();
 
-    // Send an empty command to prevent the robot from moving continuously
-    rclcpp::sleep_for(50ms);
-    UNITREE_LEGGED_SDK::HighCmd cmd = {};
-    robotUDPConnection.SetSend(cmd);
+    rclcpp::Clock clock;
+    prevCmdVelSent = clock.now();
+}
+
+void UnitreeDriverRos::cmdVelResetTimerCallback() {
+    rclcpp::Clock clock;
+    // TODO: Check what is the best timeout interval
+    if (clock.now() - prevCmdVelSent >= 1000ms &&
+        clock.now() - prevCmdVelSent <= 1001ms) {
+        UNITREE_LEGGED_SDK::HighCmd cmd = {};
+        robotUDPConnection.SetSend(cmd);
+        robotUDPConnection.Send();
+    }
 }

@@ -49,6 +49,8 @@ class UnitreeDriverRos : public rclcpp::Node {
     // Timers
    private:
     rclcpp::TimerBase::SharedPtr robotStateTimer;
+    rclcpp::TimerBase::SharedPtr cmdVelResetTimer;
+    rclcpp::Time prevCmdVelSent;
 
    public:
     /**
@@ -61,6 +63,12 @@ class UnitreeDriverRos : public rclcpp::Node {
      * @brief Callback function which publishes the odometry and imu data
      */
     void robotStateTimerCallback();
+
+    /**
+     * @brief Callback function which sends an empty High command to the robot
+     * in case no cmd vel was sent within a timeout
+     */
+    void cmdVelResetTimerCallback();
 
     /**
      * @brief Callback method which receives velocity commands and controls the robot

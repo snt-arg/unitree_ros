@@ -102,10 +102,14 @@ void UnitreeDriverRos::cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr
 void UnitreeDriverRos::cmdVelResetTimerCallback() {
     rclcpp::Clock clock;
     // TODO: Check what is the best timeout interval
-    if (clock.now() - prevCmdVelSent >= 1000ms &&
-        clock.now() - prevCmdVelSent <= 1001ms) {
-        UNITREE_LEGGED_SDK::HighCmd cmd = {};
-        robotUDPConnection.SetSend(cmd);
+    if (clock.now() - prevCmdVelSent >= 200ms &&
+        clock.now() - prevCmdVelSent <= 201ms) {
+        RCLCPP_INFO(get_logger(), "CmdVel reset triggered!");
+        robotHighCmd.velocity[0] = 0;
+        robotHighCmd.velocity[1] = 0;
+        robotHighCmd.velocity[2] = 0;
+        robotHighCmd.yawSpeed = 0;
+        robotUDPConnection.SetSend(robotHighCmd);
         robotUDPConnection.Send();
     }
 }

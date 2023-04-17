@@ -112,9 +112,9 @@ inline nav_msgs::msg::Odometry generateOdometryMsg(
     odometryStateMsg.pose.pose.position.y = highState.position[1];
     odometryStateMsg.pose.pose.position.z = highState.position[2];
 
-    odometryStateMsg.pose.pose.orientation.x = highState.imu.quaternion[0];
-    odometryStateMsg.pose.pose.orientation.y = highState.imu.quaternion[1];
-    odometryStateMsg.pose.pose.orientation.z = highState.imu.quaternion[2];
+    odometryStateMsg.pose.pose.orientation.x = highState.imu.quaternion[1];
+    odometryStateMsg.pose.pose.orientation.y = highState.imu.quaternion[2];
+    odometryStateMsg.pose.pose.orientation.z = highState.imu.quaternion[0];
     odometryStateMsg.pose.pose.orientation.w = highState.imu.quaternion[3];
 
     return odometryStateMsg;

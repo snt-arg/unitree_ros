@@ -1,5 +1,10 @@
 #include "unitree_ros/unitree_driver_ros.hpp"
 
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2_ros/transform_broadcaster.h>
+
+#include <ctime>
+#include <geometry_msgs/msg/detail/transform_stamped__struct.hpp>
 #include <rclcpp/clock.hpp>
 #include <rclcpp/utilities.hpp>
 
@@ -19,6 +24,8 @@ UnitreeDriverRos::UnitreeDriverRos()
 
     robotUDPConnection.SetIpPort(robotIP.c_str(), robotTargetPort);
     robotUDPConnection.InitCmdData(robotHighCmd);
+
+    tf_broadcaster = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
 
     cmdVelSub = create_subscription<geometry_msgs::msg::Twist>(
         cmdVelTopicName,
@@ -85,9 +92,28 @@ void UnitreeDriverRos::robotStateTimerCallback() {
         generateOdometryMsg(robotHighState, now, odometryFrameId, odometryChildFrameId);
     auto batteryStateMsg = generateBatteryStateMsg(robotHighState);
 
+    geometry_msgs::msg::TransformStamped transform;
+    transform.header.stamp = now;
+    transform.header.frame_id = "odom";
+    transform.child_frame_id = "body";
+
+    transform.transform.translation.x = odometryStateMsg.pose.pose.position.x;
+    transform.transform.translation.y = odometryStateMsg.pose.pose.position.y;
+    transform.transform.translation.z = odometryStateMsg.pose.pose.position.z;
+
+    tf2::Quaternion q;
+    q.setRPY(odometryStateMsg.pose.pose.orientation.x,
+             odometryStateMsg.pose.pose.orientation.y,
+             odometryStateMsg.pose.pose.orientation.z);
+    transform.transform.rotation.x = q.x();
+    transform.transform.rotation.y = q.y();
+    transform.transform.rotation.z = q.z();
+    transform.transform.rotation.w = q.w();
+
     odomPub->publish(odometryStateMsg);
     imuPub->publish(imuStateMsg);
     batteryStatePub->publish(batteryStateMsg);
+    tf_broadcaster->sendTransform(transform);
 }
 
 void UnitreeDriverRos::cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg) {
@@ -95,16 +121,12 @@ void UnitreeDriverRos::cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr
     robotUDPConnection.SetSend(robotHighCmd);
     robotUDPConnection.Send();
 
-    rclcpp::Clock clock;
     prevCmdVelSent = clock.now();
 }
 
 void UnitreeDriverRos::cmdVelResetTimerCallback() {
-    rclcpp::Clock clock;
-    // TODO: Check what is the best timeout interval
-    if (clock.now() - prevCmdVelSent >= 200ms &&
-        clock.now() - prevCmdVelSent <= 201ms) {
-        RCLCPP_INFO(get_logger(), "CmdVel reset triggered!");
+    auto delta_t = clock.now() - prevCmdVelSent;
+    if (delta_t >= 400ms && delta_t <= 402ms) {
         robotHighCmd.velocity[0] = 0;
         robotHighCmd.velocity[1] = 0;
         robotHighCmd.velocity[2] = 0;

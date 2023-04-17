@@ -1,12 +1,17 @@
 #ifndef UNITREE_DRIVER_ROS_HPP
 #define UNITREE_DRIVER_ROS_HPP
 
+#include <tf2_ros/transform_broadcaster.h>
+
+#include <memory>
+#include <rclcpp/clock.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include "unitree_legged_sdk/unitree_legged_sdk.h"
 #include "unitree_ros/conversion.hpp"
 
 // Ros Messages
+#include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <sensor_msgs/msg/imu.hpp>
@@ -51,6 +56,10 @@ class UnitreeDriverRos : public rclcpp::Node {
     rclcpp::TimerBase::SharedPtr robotStateTimer;
     rclcpp::TimerBase::SharedPtr cmdVelResetTimer;
     rclcpp::Time prevCmdVelSent;
+    rclcpp::Clock clock;
+
+private:
+    std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster;
 
    public:
     /**

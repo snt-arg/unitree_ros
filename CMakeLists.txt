@@ -23,6 +23,8 @@ find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 # ------------------------------
 # - External Libraries Section -
@@ -63,7 +65,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 # - Build Section -
 # -----------------------
 
-set(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs)
+set(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs tf2 tf2_ros)
 
 add_executable(unitree_driver src/unitree_ros_node.cpp src/unitree_driver_ros.cpp)
 target_link_libraries(unitree_driver ${EXTRA_LIBS})

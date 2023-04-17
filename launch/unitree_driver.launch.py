@@ -23,4 +23,13 @@ def generate_launch_description():
         output="screen",
     )
 
-    return LaunchDescription([params_file_arg, unitree_driver_node])
+    static_transform_node = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        arguments=["0", "0", "0", "0", "0", "0", "1", "body", "os_lidar"],
+        output="screen",
+    )
+
+    return LaunchDescription(
+        [params_file_arg, unitree_driver_node, static_transform_node]
+    )

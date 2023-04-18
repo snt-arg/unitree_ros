@@ -9,6 +9,7 @@
 #include <rclcpp/utilities.hpp>
 
 #include "unitree_legged_sdk/comm.h"
+#include "unitree_ros/conversion.hpp"
 
 using namespace std::chrono_literals;
 
@@ -91,29 +92,13 @@ void UnitreeDriverRos::robotStateTimerCallback() {
     auto odometryStateMsg =
         generateOdometryMsg(robotHighState, now, odometryFrameId, odometryChildFrameId);
     auto batteryStateMsg = generateBatteryStateMsg(robotHighState);
-
-    geometry_msgs::msg::TransformStamped transform;
-    transform.header.stamp = now;
-    transform.header.frame_id = "odom";
-    transform.child_frame_id = "body";
-
-    transform.transform.translation.x = odometryStateMsg.pose.pose.position.x;
-    transform.transform.translation.y = odometryStateMsg.pose.pose.position.y;
-    transform.transform.translation.z = odometryStateMsg.pose.pose.position.z;
-
-    tf2::Quaternion q;
-    q.setRPY(odometryStateMsg.pose.pose.orientation.x,
-             odometryStateMsg.pose.pose.orientation.y,
-             odometryStateMsg.pose.pose.orientation.z);
-    transform.transform.rotation.x = q.x();
-    transform.transform.rotation.y = q.y();
-    transform.transform.rotation.z = q.z();
-    transform.transform.rotation.w = q.w();
+    auto odomTransform = generateOdomTransform(
+        odometryStateMsg, now, odometryFrameId, odometryChildFrameId);
 
     odomPub->publish(odometryStateMsg);
     imuPub->publish(imuStateMsg);
     batteryStatePub->publish(batteryStateMsg);
-    tf_broadcaster->sendTransform(transform);
+    tf_broadcaster->sendTransform(odomTransform);
 }
 
 void UnitreeDriverRos::cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg) {

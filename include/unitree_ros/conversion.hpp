@@ -1,11 +1,14 @@
 #ifndef CONVERSION_HPP
 #define CONVERSION_HPP
 
+#include <tf2/LinearMath/Quaternion.h>
 #include <unitree_legged_sdk/unitree_legged_sdk.h>
 
+#include <geometry_msgs/msg/detail/transform_stamped__struct.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 // Ros Messages
+#include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <sensor_msgs/msg/imu.hpp>
@@ -34,15 +37,10 @@ inline UNITREE_LEGGED_SDK::HighCmd rosMsg2Cmd(
     cmd.euler[0] = 0;
     cmd.euler[1] = 0;
     cmd.euler[2] = 0;
-    cmd.velocity[0] = 0.0f;
-    cmd.velocity[1] = 0.0f;
-    cmd.yawSpeed = 0.0f;
-    cmd.reserve = 0;
-
     cmd.velocity[0] = msg->linear.x;
     cmd.velocity[1] = msg->linear.y;
     cmd.yawSpeed = msg->angular.z;
-
+    cmd.reserve = 0;
     cmd.mode = 2;
     cmd.gaitType = 1;
 
@@ -135,6 +133,31 @@ inline unitree_ros::msg::BmsState generateBatteryStateMsg(
     msg.bms_status = highState.bms.bms_status;
 
     return msg;
+}
+
+inline geometry_msgs::msg::TransformStamped generateOdomTransform(
+    nav_msgs::msg::Odometry odom,
+    rclcpp::Time now,
+    string frameId,
+    string childFrameId) {
+    geometry_msgs::msg::TransformStamped transform;
+    transform.header.stamp = now;
+    transform.header.frame_id = frameId;
+    transform.child_frame_id = childFrameId;
+
+    transform.transform.translation.x = odom.pose.pose.position.x;
+    transform.transform.translation.y = odom.pose.pose.position.y;
+    transform.transform.translation.z = odom.pose.pose.position.z;
+
+    tf2::Quaternion q;
+    q.setRPY(odom.pose.pose.orientation.z,
+             odom.pose.pose.orientation.y,
+             odom.pose.pose.orientation.x);
+    transform.transform.rotation.x = q.x();
+    transform.transform.rotation.y = q.y();
+    transform.transform.rotation.z = q.z();
+    transform.transform.rotation.w = q.w();
+    return transform;
 }
 
 #endif  // !CONVERSION_HPP

@@ -27,19 +27,19 @@ class UnitreeDriverRos : public rclcpp::Node {
 
     // Frame Ids
    private:
-    std::string odometryFrameId = "map";
-    std::string odometryChildFrameId = "odom";
+    std::string odometryFrameId = "odom";
+    std::string odometryChildFrameId = "body";
     std::string imuFrameId = "IMU";
 
     // Robot Related
    private:
+    int robotLocalPort = 8090;
+    int robotTargetPort = 8082;
+    std::string robotIP = "192.168.12.1";
     // UDP connection used for High level commands
     UNITREE_LEGGED_SDK::UDP robotUDPConnection;
     UNITREE_LEGGED_SDK::HighCmd robotHighCmd = {};
     UNITREE_LEGGED_SDK::HighState robotHighState = {};
-    int robotLocalPort = 8090;
-    int robotTargetPort = 8082;
-    std::string robotIP = "192.168.12.1";
 
     // Publishers
    private:
@@ -58,7 +58,8 @@ class UnitreeDriverRos : public rclcpp::Node {
     rclcpp::Time prevCmdVelSent;
     rclcpp::Clock clock;
 
-private:
+    // TF
+   private:
     std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster;
 
    public:

@@ -26,7 +26,7 @@ def generate_launch_description():
     static_transform_node = Node(
         package="tf2_ros",
         executable="static_transform_publisher",
-        arguments=["0", "0", "0", "0", "0", "0", "1", "body", "os_lidar"],
+        arguments=["0", "0", "0", "0", "0", "0", "1", "base_link", "os_lidar"],
         output="screen",
     )
 

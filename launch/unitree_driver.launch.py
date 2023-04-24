@@ -46,7 +46,7 @@ def launch_unitree_driver(context, *args, **kwargs):
             "0",
             "1",
             params["odometry_child_frame_id"],
-            "os_lidar",
+            "os_sensor",
         ],
         output="screen",
     )

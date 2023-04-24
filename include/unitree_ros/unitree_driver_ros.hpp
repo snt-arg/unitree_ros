@@ -28,7 +28,7 @@ class UnitreeDriverRos : public rclcpp::Node {
     // Frame Ids
    private:
     std::string odometryFrameId = "odom";
-    std::string odometryChildFrameId = "body";
+    std::string odometryChildFrameId = "base_link";
     std::string imuFrameId = "IMU";
 
     // Robot Related

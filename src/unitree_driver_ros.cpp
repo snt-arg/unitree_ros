@@ -70,8 +70,8 @@ void UnitreeDriverRos::readParams() {
 
     // Frame Ids
     declare_parameter<std::string>("imu_frame_id", "IMU");
-    declare_parameter<std::string>("odometry_frame_id", "map");
-    declare_parameter<std::string>("odometry_child_frame_id", "odom");
+    declare_parameter<std::string>("odometry_frame_id", "odom");
+    declare_parameter<std::string>("odometry_child_frame_id", "base_link");
     // --------------------------------------------------------
     get_parameter("odometry_frame_id", odometryFrameId);
     get_parameter("odometry_child_frame_id", odometryChildFrameId);

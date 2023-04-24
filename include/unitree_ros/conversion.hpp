@@ -110,8 +110,8 @@ inline nav_msgs::msg::Odometry generateOdometryMsg(
     odometryStateMsg.pose.pose.position.y = highState.position[1];
     odometryStateMsg.pose.pose.position.z = highState.position[2];
 
-    odometryStateMsg.pose.pose.orientation.x = highState.imu.quaternion[1];
-    odometryStateMsg.pose.pose.orientation.y = highState.imu.quaternion[2];
+    odometryStateMsg.pose.pose.orientation.x = highState.imu.quaternion[2];
+    odometryStateMsg.pose.pose.orientation.y = highState.imu.quaternion[1];
     odometryStateMsg.pose.pose.orientation.z = highState.imu.quaternion[0];
     odometryStateMsg.pose.pose.orientation.w = highState.imu.quaternion[3];
 
@@ -150,9 +150,9 @@ inline geometry_msgs::msg::TransformStamped generateOdomTransform(
     transform.transform.translation.z = odom.pose.pose.position.z;
 
     tf2::Quaternion q;
-    q.setRPY(odom.pose.pose.orientation.z,
+    q.setRPY(odom.pose.pose.orientation.x,
              odom.pose.pose.orientation.y,
-             odom.pose.pose.orientation.x);
+             odom.pose.pose.orientation.z);
     transform.transform.rotation.x = q.x();
     transform.transform.rotation.y = q.y();
     transform.transform.rotation.z = q.z();

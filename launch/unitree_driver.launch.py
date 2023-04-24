@@ -39,8 +39,8 @@ def launch_unitree_driver(context, *args, **kwargs):
         executable="static_transform_publisher",
         arguments=[
             "0",
-            "0",
-            "0",
+            "-0.02",
+            "0.20",
             "0",
             "0",
             "0",

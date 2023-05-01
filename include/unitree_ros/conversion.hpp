@@ -15,6 +15,9 @@
 #include <unitree_ros/msg/bms_cmd.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
 #include <unitree_ros/msg/high_cmd.hpp>
+#include <unitree_ros/msg/high_state.hpp>
+
+#include "unitree_ros/msg/detail/high_state__struct.hpp"
 
 /**
  * @brief Update the high level command from a Twist message to send to robot
@@ -110,10 +113,10 @@ inline nav_msgs::msg::Odometry generateOdometryMsg(
     odometryStateMsg.pose.pose.position.y = highState.position[1];
     odometryStateMsg.pose.pose.position.z = highState.position[2];
 
-    odometryStateMsg.pose.pose.orientation.x = highState.imu.quaternion[2];
-    odometryStateMsg.pose.pose.orientation.y = highState.imu.quaternion[1];
-    odometryStateMsg.pose.pose.orientation.z = highState.imu.quaternion[0];
-    odometryStateMsg.pose.pose.orientation.w = highState.imu.quaternion[3];
+    odometryStateMsg.pose.pose.orientation.x = highState.imu.rpy[0];
+    odometryStateMsg.pose.pose.orientation.y = highState.imu.rpy[1];
+    odometryStateMsg.pose.pose.orientation.z = highState.imu.rpy[2];
+    odometryStateMsg.pose.pose.orientation.w = 1;
 
     return odometryStateMsg;
 }

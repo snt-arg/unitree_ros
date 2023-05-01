@@ -23,7 +23,7 @@ def generate_launch_description():
         output="screen",
     )
 
-    static_transform_node = Node(
+    t_baselink_ossensor = Node(
         package="tf2_ros",
         executable="static_transform_publisher",
         arguments=[
@@ -40,6 +40,28 @@ def generate_launch_description():
         output="screen",
     )
 
+    t_basefootprint_baselink = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        arguments=[
+            "0",
+            "0",
+            "0.0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "base_footprint",
+            "base_link",
+        ],
+        output="screen",
+    )
+
     return LaunchDescription(
-        [params_file_arg, unitree_driver_node, static_transform_node]
+        [
+            params_file_arg,
+            unitree_driver_node,
+            t_baselink_ossensor,
+            t_basefootprint_baselink,
+        ]
     )

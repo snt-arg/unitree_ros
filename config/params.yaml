@@ -9,6 +9,6 @@ unitree_driver_node:
     imu_topic_name: '/imu'
     bms_state_topic_name: '/bms_state'
     # Frame Ids
-    imu_frame_id: 'IMU'
+    imu_frame_id: 'imu'
     odometry_frame_id: 'odom'
-    odometry_child_frame_id: 'base_link'
+    odometry_child_frame_id: 'base_footprint'

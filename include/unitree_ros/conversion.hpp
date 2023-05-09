@@ -26,7 +26,7 @@
  *
  * @return updated High level command
  */
-inline UNITREE_LEGGED_SDK::HighCmd rosMsg2Cmd(
+inline UNITREE_LEGGED_SDK::HighCmd convertTwistMsgToHighLevelCmd(
     const geometry_msgs::msg::Twist::SharedPtr msg) {
     UNITREE_LEGGED_SDK::HighCmd cmd;
 
@@ -59,9 +59,10 @@ inline UNITREE_LEGGED_SDK::HighCmd rosMsg2Cmd(
  *
  * @return imu message
  */
-inline sensor_msgs::msg::Imu generateImuMsg(UNITREE_LEGGED_SDK::HighState &highState,
-                                            rclcpp::Time now,
-                                            std::string frame_id) {
+inline sensor_msgs::msg::Imu convertIMUDataToMsg(
+    UNITREE_LEGGED_SDK::HighState &highState,
+    rclcpp::Time now,
+    std::string frame_id) {
     sensor_msgs::msg::Imu imuStateMsg;
 
     imuStateMsg.header.frame_id = frame_id;
@@ -93,7 +94,7 @@ inline sensor_msgs::msg::Imu generateImuMsg(UNITREE_LEGGED_SDK::HighState &highS
  *
  * @return odometry message
  */
-inline nav_msgs::msg::Odometry generateOdometryMsg(
+inline nav_msgs::msg::Odometry convertOdometryDataToMsg(
     UNITREE_LEGGED_SDK::HighState &highState,
     rclcpp::Time now,
     std::string frameId,
@@ -121,7 +122,7 @@ inline nav_msgs::msg::Odometry generateOdometryMsg(
     return odometryStateMsg;
 }
 
-inline unitree_ros::msg::BmsState generateBatteryStateMsg(
+inline unitree_ros::msg::BmsState convertBMSDataToMsg(
     UNITREE_LEGGED_SDK::HighState &highState) {
     unitree_ros::msg::BmsState msg;
 

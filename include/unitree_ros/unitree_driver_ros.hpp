@@ -29,7 +29,7 @@ class UnitreeDriverRos : public rclcpp::Node {
    private:
     std::string odometryFrameId = "odom";
     std::string odometryChildFrameId = "base_link";
-    std::string imuFrameId = "IMU";
+    std::string imuFrameId = "imu";
 
     // Robot Related
    private:
@@ -57,6 +57,10 @@ class UnitreeDriverRos : public rclcpp::Node {
     rclcpp::TimerBase::SharedPtr cmdVelResetTimer;
     rclcpp::Time prevCmdVelSent;
     rclcpp::Clock clock;
+
+    // Flags
+   private:
+    bool enableObstacleAvoidance = true;
 
     // TF
    private:
@@ -91,6 +95,21 @@ class UnitreeDriverRos : public rclcpp::Node {
      * @brief Method which reads ros_params and updates the variables values.
      */
     void readParams();
+
+    /**
+     * @brief Method which initializes the publishers
+     */
+    void initPublishers();
+
+    /**
+     * @brief Method which initializes the subscriptions
+     */
+    void initSubscriptions();
+
+    /**
+     * @brief Method which initializes the timers
+     */
+    void initTimers();
 };
 
 #endif  // UNITREE_DRIVER_ROS_HPP

@@ -103,7 +103,7 @@ void UnitreeDriverRos::robotStateTimerCallback() {
 
     auto imuStateMsg = convertIMUDataToMsg(robotHighState, now, imuFrameId);
     auto odometryStateMsg = convertOdometryDataToMsg(
-        robotHighState, now, odometryFrameId, odometryChildFrameId);
+        robotHighState, now, odometryFrameId, odometryChildFrameId, odomDelta);
     auto batteryStateMsg = convertBMSDataToMsg(robotHighState);
     auto odomTransform = generateOdomTransform(
         odometryStateMsg, now, odometryFrameId, odometryChildFrameId);
@@ -149,4 +149,17 @@ void UnitreeDriverRos::cmdVelResetTimerCallback() {
         robotUDPConnection.SetSend(robotHighCmd);
         robotUDPConnection.Send();
     }
+}
+
+void UnitreeDriverRos::resetOdom() {
+    robotUDPConnection.Send();
+    robotUDPConnection.Recv();
+    robotUDPConnection.GetRecv(robotHighState);
+    odomDelta[0] = -robotHighState.position[0];  // pos_x
+    odomDelta[1] = -robotHighState.position[1];  // pos_y
+    odomDelta[2] = -robotHighState.position[2];  // pos_z
+
+    odomDelta[3] = -robotHighState.imu.rpy[0];   // rot_x
+    odomDelta[4] = -robotHighState.imu.rpy[1];   // rot_y
+    odomDelta[5] = -robotHighState.imu.rpy[2];   // rot_z
 }

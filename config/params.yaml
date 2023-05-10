@@ -3,17 +3,15 @@ unitree_driver_node:
     # Robot parameters
     robot_ip: '192.168.12.1'
     robot_target_port: 8082
-
     # Topic names
     cmd_vel_topic_name: '/cmd_vel'
     odometry_topic_name: '/odom'
     imu_topic_name: '/imu'
     bms_state_topic_name: '/bms_state'
-
     # Frame Ids
     imu_frame_id: 'imu'
     odometry_frame_id: 'odom'
     odometry_child_frame_id: 'base_footprint'
-
     # Flags
     enable_obstacle_avoidance: true
+    reset_odometry: true

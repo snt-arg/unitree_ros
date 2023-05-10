@@ -98,7 +98,8 @@ inline nav_msgs::msg::Odometry convertOdometryDataToMsg(
     UNITREE_LEGGED_SDK::HighState &highState,
     rclcpp::Time now,
     std::string frameId,
-    std::string childFrameId) {
+    std::string childFrameId,
+    std::vector<float> odomDelta) {
     nav_msgs::msg::Odometry odometryStateMsg;
 
     odometryStateMsg.child_frame_id = childFrameId;
@@ -110,13 +111,13 @@ inline nav_msgs::msg::Odometry convertOdometryDataToMsg(
     odometryStateMsg.twist.twist.linear.z = highState.velocity[2];
     odometryStateMsg.twist.twist.angular.z = highState.yawSpeed;
 
-    odometryStateMsg.pose.pose.position.x = highState.position[0];
-    odometryStateMsg.pose.pose.position.y = highState.position[1];
-    odometryStateMsg.pose.pose.position.z = highState.position[2];
+    odometryStateMsg.pose.pose.position.x = highState.position[0] + odomDelta[0];
+    odometryStateMsg.pose.pose.position.y = highState.position[1] + odomDelta[2];
+    odometryStateMsg.pose.pose.position.z = highState.position[2] + odomDelta[3];
 
-    odometryStateMsg.pose.pose.orientation.x = highState.imu.rpy[0];
-    odometryStateMsg.pose.pose.orientation.y = highState.imu.rpy[1];
-    odometryStateMsg.pose.pose.orientation.z = highState.imu.rpy[2];
+    odometryStateMsg.pose.pose.orientation.x = highState.imu.rpy[0] + odomDelta[4];
+    odometryStateMsg.pose.pose.orientation.y = highState.imu.rpy[1] + odomDelta[5];
+    odometryStateMsg.pose.pose.orientation.z = highState.imu.rpy[2] + odomDelta[6];
     odometryStateMsg.pose.pose.orientation.w = 1;
 
     return odometryStateMsg;

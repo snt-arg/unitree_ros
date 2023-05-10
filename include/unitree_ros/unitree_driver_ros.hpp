@@ -16,6 +16,7 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
+#include <vector>
 
 class UnitreeDriverRos : public rclcpp::Node {
     // Topic Names
@@ -61,6 +62,10 @@ class UnitreeDriverRos : public rclcpp::Node {
     // Flags
    private:
     bool enableObstacleAvoidance = true;
+    bool resetOdometry = true;
+
+   private:
+    std::vector<float> odomDelta = {0, 0, 0, 0, 0, 0};
 
     // TF
    private:
@@ -110,6 +115,11 @@ class UnitreeDriverRos : public rclcpp::Node {
      * @brief Method which initializes the timers
      */
     void initTimers();
+
+    /**
+     * @brief Method which resets the odometry to zero
+     */
+    void resetOdom();
 };
 
 #endif  // UNITREE_DRIVER_ROS_HPP

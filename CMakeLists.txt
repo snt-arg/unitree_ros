@@ -67,7 +67,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 set(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs tf2 tf2_ros)
 
-add_executable(unitree_driver src/unitree_ros_node.cpp src/unitree_driver_ros.cpp)
+add_executable(unitree_driver src/unitree_ros_node.cpp src/unitree_ros.cpp src/unitree_driver.cpp src/serializers.cpp)
 target_link_libraries(unitree_driver ${EXTRA_LIBS})
 ament_target_dependencies(unitree_driver ${DEPENDENCIES})
 rosidl_target_interfaces(unitree_driver ${PROJECT_NAME} "rosidl_typesupport_cpp")

@@ -25,7 +25,7 @@ def launch_unitree_driver(context, *args, **kwargs):
     params_file = LaunchConfiguration("params_file")
 
     with open(params_file.perform(context)) as f:
-        params = yaml.safe_load(f)["unitree_driver_node"]["ros__parameters"]
+        params = yaml.safe_load(f)["unitree_ros_node"]["ros__parameters"]
 
     unitree_driver_node = Node(
         package="unitree_ros",

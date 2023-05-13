@@ -71,7 +71,7 @@ void UnitreeRosNode::apply_namespace_to_topic_names() {
 void UnitreeRosNode::init_subscriptions() {
     RCLCPP_INFO(get_logger(), "Initializing ROS subscriptions...");
 
-    rclcpp::QoS qos = rclcpp::QoS(rclcpp::KeepLast(10)).best_effort();
+    rclcpp::QoS qos = rclcpp::QoS(rclcpp::KeepLast(1)).best_effort();
     cmd_vel_sub = this->create_subscription<geometry_msgs::msg::Twist>(
         cmd_vel_topic_name,
         qos,

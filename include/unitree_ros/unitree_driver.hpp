@@ -54,6 +54,7 @@ class UnitreeDriver {
     odom_t get_odom();
     UNITREE_LEGGED_SDK::IMU get_imu();
     UNITREE_LEGGED_SDK::BmsState get_bms();
+    sensor_ranges_t get_sensor_ranges();
     void set_mode(mode_enum mode);
     void set_gaitype(gaitype_enum gaitype);
     void stop();

@@ -48,6 +48,16 @@ odom_t UnitreeDriver::get_odom() {
     return {pose, velocity};
 }
 
+sensor_ranges_t UnitreeDriver::get_sensor_ranges() {
+    recv_high_state_();
+    sensor_ranges_t ranges;
+    ranges.left = high_state.rangeObstacle[0];
+    ranges.front = high_state.rangeObstacle[1];
+    ranges.right = high_state.rangeObstacle[2];
+    ranges.bottom = high_state.rangeObstacle[3];
+    return ranges;
+}
+
 UNITREE_LEGGED_SDK::IMU UnitreeDriver::get_imu() { return high_state.imu; }
 
 UNITREE_LEGGED_SDK::BmsState UnitreeDriver::get_bms() { return high_state.bms; }

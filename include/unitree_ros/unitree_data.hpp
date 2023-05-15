@@ -47,4 +47,11 @@ typedef struct {
     velocity_t velocity;
 } odom_t;
 
+typedef struct {
+    float left;
+    float front;
+    float right;
+    float bottom;
+} sensor_ranges_t;
+
 #endif  // !#ifndef UNITREE_DATA_HPP

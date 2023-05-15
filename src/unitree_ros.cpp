@@ -1,4 +1,5 @@
 #include <nav_msgs/msg/detail/odometry__struct.hpp>
+#include <std_msgs/msg/detail/empty__struct.hpp>
 #include <unitree_ros/unitree_ros.hpp>
 
 #include "unitree_ros/serializers.hpp"
@@ -77,6 +78,16 @@ void UnitreeRosNode::init_subscriptions() {
         qos,
         std::bind(&UnitreeRosNode::cmd_vel_callback, this, std::placeholders::_1));
 
+    stand_up_sub = this->create_subscription<std_msgs::msg::Empty>(
+        "stand_up",
+        qos,
+        std::bind(&UnitreeRosNode::stand_up_callback, this, std::placeholders::_1));
+
+    stand_down_sub = this->create_subscription<std_msgs::msg::Empty>(
+        "stand_down",
+        qos,
+        std::bind(&UnitreeRosNode::stand_down_callback, this, std::placeholders::_1));
+
     RCLCPP_INFO(get_logger(), "Finished initializing ROS subscriptions!");
 }
 
@@ -113,6 +124,14 @@ void UnitreeRosNode::robot_state_callback() {
     publish_imu();
     publish_bms();
     publish_odom_tf();
+    auto ranges = unitree_driver.get_sensor_ranges();
+
+    std::cout << "------------------------------------------" << std::endl;
+    std::cout << "Left sensor range: " << ranges.left << std::endl;
+    std::cout << "Front sensor range: " << ranges.left << std::endl;
+    std::cout << "Right sensor range: " << ranges.left << std::endl;
+    std::cout << "Bottom sensor range: " << ranges.left << std::endl;
+    std::cout << "------------------------------------------" << std::endl;
 }
 
 void UnitreeRosNode::cmd_vel_reset_callback() {
@@ -120,6 +139,15 @@ void UnitreeRosNode::cmd_vel_reset_callback() {
     if (delta_t >= 400ms && delta_t <= 402ms) {
         unitree_driver.walk_w_vel(0, 0, 0);
     }
+}
+
+void UnitreeRosNode::stand_up_callback(const std_msgs::msg::Empty::UniquePtr msg) {
+    msg.get();  // Just to ignore linter warning
+    unitree_driver.stand_up();
+}
+void UnitreeRosNode::stand_down_callback(const std_msgs::msg::Empty::UniquePtr msg) {
+    msg.get();  // Just to ignore linter warning
+    unitree_driver.stand_down();
 }
 
 void UnitreeRosNode::publish_odom() {

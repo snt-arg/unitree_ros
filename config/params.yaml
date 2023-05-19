@@ -1,7 +1,7 @@
 unitree_ros_node:
   ros__parameters:
     # namespace
-    ns: 'go1'
+    ns: ''
 
     # Robot parameters
     robot_ip: '192.168.12.1'

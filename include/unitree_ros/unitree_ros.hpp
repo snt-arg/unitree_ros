@@ -12,6 +12,7 @@
 #include <std_msgs/msg/empty.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
 
+#include "unitree_ros/unitree_data.hpp"
 #include "unitree_ros/unitree_driver.hpp"
 
 class UnitreeRosNode : public rclcpp::Node {
@@ -68,10 +69,10 @@ class UnitreeRosNode : public rclcpp::Node {
     void stand_up_callback(const std_msgs::msg::Empty::UniquePtr msg);
     void stand_down_callback(const std_msgs::msg::Empty::UniquePtr msg);
 
-    void publish_odom();
-    void publish_imu();
+    void publish_odom(rclcpp::Time time);
+    void publish_imu(rclcpp::Time time);
     void publish_bms();
-    void publish_odom_tf();
+    void publish_odom_tf(rclcpp::Time time, odom_t odom);
 
     void apply_namespace_to_topic_names();
 };

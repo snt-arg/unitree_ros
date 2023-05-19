@@ -8,9 +8,11 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+#include <std_msgs/msg/detail/empty__struct.hpp>
 #include <std_msgs/msg/empty.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
 
+#include "unitree_ros/unitree_data.hpp"
 #include "unitree_ros/unitree_driver.hpp"
 
 class UnitreeRosNode : public rclcpp::Node {
@@ -39,6 +41,8 @@ class UnitreeRosNode : public rclcpp::Node {
 
     // Subscriptions
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub;
+    rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr stand_up_sub;
+    rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr stand_down_sub;
 
     // Timers
     rclcpp::TimerBase::SharedPtr robot_state_timer;
@@ -62,11 +66,13 @@ class UnitreeRosNode : public rclcpp::Node {
     void cmd_vel_callback(const geometry_msgs::msg::Twist::UniquePtr msg);
     void robot_state_callback();
     void cmd_vel_reset_callback();
+    void stand_up_callback(const std_msgs::msg::Empty::UniquePtr msg);
+    void stand_down_callback(const std_msgs::msg::Empty::UniquePtr msg);
 
-    void publish_odom();
-    void publish_imu();
+    void publish_odom(rclcpp::Time time);
+    void publish_imu(rclcpp::Time time);
     void publish_bms();
-    void publish_odom_tf();
+    void publish_odom_tf(rclcpp::Time time, odom_t odom);
 
     void apply_namespace_to_topic_names();
 };

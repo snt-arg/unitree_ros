@@ -13,10 +13,9 @@ UnitreeDriver::UnitreeDriver(std::string ip_addr_, int target_port_)
         throw std::runtime_error("Connection to the robot could not be established!");
     }
 
-    illuminate_foot_led({0, 255, 0});
-
     // Initialize the high level command and state
     udp_connection_.InitCmdData(high_cmd);
+    illuminate_foot_led({0, 255, 0});
 
     stand_up();
 }
@@ -48,6 +47,16 @@ odom_t UnitreeDriver::get_odom() {
     return {pose, velocity};
 }
 
+sensor_ranges_t UnitreeDriver::get_sensor_ranges() {
+    /* recv_high_state_(); */
+    sensor_ranges_t ranges;
+    ranges.front = high_state.rangeObstacle[0];
+    ranges.left = high_state.rangeObstacle[1];
+    ranges.right = high_state.rangeObstacle[2];
+    ranges.bottom = high_state.rangeObstacle[3];
+    return ranges;
+}
+
 UNITREE_LEGGED_SDK::IMU UnitreeDriver::get_imu() { return high_state.imu; }
 
 UNITREE_LEGGED_SDK::BmsState UnitreeDriver::get_bms() { return high_state.bms; }
@@ -65,6 +74,7 @@ void UnitreeDriver::set_gaitype(gaitype_enum gait_type) { curr_gait_type = gait_
 // -----------------------------------------------------------------------------
 
 void UnitreeDriver::stand_down() {
+    std::cout << "STANDIN DOWN" << std::endl;
     walk_w_vel(0, 0, 0);
     set_gaitype(gaitype_enum::GAITYPE_IDDLE);
     set_mode(mode_enum::STAND_DOWN);
@@ -74,16 +84,18 @@ void UnitreeDriver::stand_down() {
 void UnitreeDriver::stand_up() {
     walk_w_vel(0, 0, 0);
     set_mode(mode_enum::STAND_UP);
-    set_gaitype(gaitype_enum::TROT);
+    set_gaitype(gaitype_enum::TROT_OBSTACLE);
     send_high_cmd_();
 }
 
 void UnitreeDriver::walk_w_vel(float x, float y, float yaw) {
     high_cmd.mode = mode_enum::WALK_W_VEL;
+    std::cout << "Gait Type: " << curr_gait_type << std::endl;
     high_cmd.gaitType = curr_gait_type;
     high_cmd.velocity[0] = x;
     high_cmd.velocity[1] = y;
     high_cmd.yawSpeed = yaw;
+    std::cout << "RECEIVED CMD VEL" << std::endl;
     send_high_cmd_();
 }
 

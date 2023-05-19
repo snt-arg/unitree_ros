@@ -1,7 +1,11 @@
+#include <tf2/LinearMath/Quaternion.h>
+
 #include <nav_msgs/msg/detail/odometry__struct.hpp>
+#include <std_msgs/msg/detail/empty__struct.hpp>
 #include <unitree_ros/unitree_ros.hpp>
 
 #include "unitree_ros/serializers.hpp"
+#include "unitree_ros/unitree_data.hpp"
 
 UnitreeRosNode::UnitreeRosNode() : Node("unitree_ros_node"), unitree_driver() {
     read_parameters();
@@ -49,8 +53,8 @@ void UnitreeRosNode::read_parameters() {
     declare_parameter<std::string>("odom_frame_id", odom_frame_id);
     declare_parameter<std::string>("odom_child_frame_id", odom_child_frame_id);
     // --------------------------------------------------------
-    get_parameter("odometry_frame_id", odom_frame_id);
-    get_parameter("odometry_child_frame_id", odom_child_frame_id);
+    get_parameter("odom_frame_id", odom_frame_id);
+    get_parameter("odom_child_frame_id", odom_child_frame_id);
     get_parameter("imu_frame_id", imu_frame_id);
 
     apply_namespace_to_topic_names();
@@ -62,6 +66,12 @@ void UnitreeRosNode::apply_namespace_to_topic_names() {
     odom_topic_name = ns + odom_topic_name;
     imu_topic_name = ns + imu_topic_name;
     bms_topic_name = ns + bms_topic_name;
+
+    if (ns != "") {
+        imu_frame_id = ns + '/' + imu_frame_id;
+        odom_frame_id = ns + '/' + odom_frame_id;
+        odom_child_frame_id = ns + '/' + odom_child_frame_id;
+    }
 }
 
 void UnitreeRosNode::init_subscriptions() {
@@ -72,6 +82,16 @@ void UnitreeRosNode::init_subscriptions() {
         cmd_vel_topic_name,
         qos,
         std::bind(&UnitreeRosNode::cmd_vel_callback, this, std::placeholders::_1));
+
+    stand_up_sub = this->create_subscription<std_msgs::msg::Empty>(
+        "stand_up",
+        qos,
+        std::bind(&UnitreeRosNode::stand_up_callback, this, std::placeholders::_1));
+
+    stand_down_sub = this->create_subscription<std_msgs::msg::Empty>(
+        "stand_down",
+        qos,
+        std::bind(&UnitreeRosNode::stand_down_callback, this, std::placeholders::_1));
 
     RCLCPP_INFO(get_logger(), "Finished initializing ROS subscriptions!");
 }
@@ -91,7 +111,7 @@ void UnitreeRosNode::init_timers() {
     RCLCPP_INFO(get_logger(), "Initializing ROS timers...");
 
     robot_state_timer = this->create_wall_timer(
-        2ms, std::bind(&UnitreeRosNode::robot_state_callback, this));
+        100ms, std::bind(&UnitreeRosNode::robot_state_callback, this));
 
     cmd_vel_reset_timer = this->create_wall_timer(
         1ms, std::bind(&UnitreeRosNode::cmd_vel_reset_callback, this));
@@ -105,10 +125,10 @@ void UnitreeRosNode::cmd_vel_callback(const geometry_msgs::msg::Twist::UniquePtr
 }
 
 void UnitreeRosNode::robot_state_callback() {
-    publish_odom();
-    publish_imu();
+    auto now = this->get_clock()->now();
+    publish_imu(now);
     publish_bms();
-    publish_odom_tf();
+    publish_odom(now);
 }
 
 void UnitreeRosNode::cmd_vel_reset_callback() {
@@ -118,18 +138,37 @@ void UnitreeRosNode::cmd_vel_reset_callback() {
     }
 }
 
-void UnitreeRosNode::publish_odom() {
-    nav_msgs::msg::Odometry odom_msg;
-    odom_msg.header.stamp = this->get_clock()->now();
-    odom_msg.header.frame_id = odom_frame_id;
-    odom_msg.child_frame_id = odom_child_frame_id;
-    serialize(odom_msg, unitree_driver.get_odom());
-    odom_pub->publish(odom_msg);
+void UnitreeRosNode::stand_up_callback(const std_msgs::msg::Empty::UniquePtr msg) {
+    msg.get();  // Just to ignore linter warning
+    unitree_driver.stand_up();
+}
+void UnitreeRosNode::stand_down_callback(const std_msgs::msg::Empty::UniquePtr msg) {
+    msg.get();  // Just to ignore linter warning
+    unitree_driver.stand_down();
 }
 
-void UnitreeRosNode::publish_imu() {
+void UnitreeRosNode::publish_odom(rclcpp::Time time) {
+    odom_t odom = unitree_driver.get_odom();
+
+    tf2::Quaternion q;
+    q.setRPY(odom.pose.orientation.x, odom.pose.orientation.y, odom.pose.orientation.z);
+    odom.pose.orientation.x = q.getX();
+    odom.pose.orientation.y = q.getY();
+    odom.pose.orientation.z = q.getZ();
+    odom.pose.orientation.w = q.getW();
+
+    nav_msgs::msg::Odometry odom_msg;
+    odom_msg.header.stamp = time;
+    odom_msg.header.frame_id = odom_frame_id;
+    odom_msg.child_frame_id = odom_child_frame_id;
+    serialize(odom_msg, odom);
+    odom_pub->publish(odom_msg);
+    publish_odom_tf(time, odom);
+}
+
+void UnitreeRosNode::publish_imu(rclcpp::Time time) {
     sensor_msgs::msg::Imu imu_msg;
-    imu_msg.header.stamp = this->get_clock()->now();
+    imu_msg.header.stamp = time;
     imu_msg.header.frame_id = imu_frame_id;
     serialize(imu_msg, unitree_driver.get_imu());
     imu_pub->publish(imu_msg);
@@ -141,11 +180,10 @@ void UnitreeRosNode::publish_bms() {
     bms_pub->publish(bms_msg);
 }
 
-void UnitreeRosNode::publish_odom_tf() {
+void UnitreeRosNode::publish_odom_tf(rclcpp::Time time, odom_t odom) {
     geometry_msgs::msg::TransformStamped transform;
-    odom_t odom = unitree_driver.get_odom();
 
-    transform.header.stamp = this->get_clock()->now();
+    transform.header.stamp = time;
     transform.header.frame_id = odom_frame_id;
     transform.child_frame_id = odom_child_frame_id;
 
@@ -153,12 +191,10 @@ void UnitreeRosNode::publish_odom_tf() {
     transform.transform.translation.y = odom.pose.position.y;
     transform.transform.translation.z = odom.pose.position.z;
 
-    tf2::Quaternion q;
-    q.setRPY(odom.pose.orientation.x, odom.pose.orientation.y, odom.pose.orientation.z);
-    transform.transform.rotation.x = q.x();
-    transform.transform.rotation.y = q.y();
-    transform.transform.rotation.z = q.z();
-    transform.transform.rotation.w = q.w();
+    transform.transform.rotation.x = odom.pose.orientation.x;
+    transform.transform.rotation.y = odom.pose.orientation.y;
+    transform.transform.rotation.z = odom.pose.orientation.z;
+    transform.transform.rotation.w = odom.pose.orientation.w;
 
     tf_broadcaster->sendTransform(transform);
 }

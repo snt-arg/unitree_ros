@@ -62,10 +62,6 @@ void UnitreeRosNode::apply_namespace_to_topic_names() {
     odom_topic_name = ns + odom_topic_name;
     imu_topic_name = ns + imu_topic_name;
     bms_topic_name = ns + bms_topic_name;
-
-    imu_frame_id = ns + '/' + imu_frame_id;
-    odom_frame_id = ns + '/' + odom_frame_id;
-    odom_child_frame_id = ns + '/' + odom_child_frame_id;
 }
 
 void UnitreeRosNode::init_subscriptions() {
@@ -83,7 +79,7 @@ void UnitreeRosNode::init_subscriptions() {
 void UnitreeRosNode::init_publishers() {
     RCLCPP_INFO(get_logger(), "Initializing ROS publishers...");
 
-    rclcpp::QoS qos = rclcpp::QoS(rclcpp::KeepLast(10)).best_effort();
+    rclcpp::QoS qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable();
     odom_pub = this->create_publisher<nav_msgs::msg::Odometry>(odom_topic_name, qos);
     imu_pub = this->create_publisher<sensor_msgs::msg::Imu>(imu_topic_name, qos);
     bms_pub = this->create_publisher<unitree_ros::msg::BmsState>(bms_topic_name, qos);

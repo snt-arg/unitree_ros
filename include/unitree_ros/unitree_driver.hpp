@@ -17,8 +17,13 @@ class UnitreeDriver {
 
     UNITREE_LEGGED_SDK::HighCmd high_cmd = {};
     UNITREE_LEGGED_SDK::HighState high_state = {};
+
+    // Robot settings
+   private:
     mode_enum curr_mode = mode_enum::MODE_IDDLE;
     gaitype_enum curr_gait_type = gaitype_enum::GAITYPE_IDDLE;
+    velocity_t curr_velocity_cmd = {0, 0, 0};
+    uint8_t speed_level = speed_level_enum::LOW_SPEED;
 
    public:
     UnitreeDriver(std::string ip_addr_ = "192.168.12.1", int target_port_ = 8082);

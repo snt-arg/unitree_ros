@@ -1,7 +1,5 @@
 #include <tf2/LinearMath/Quaternion.h>
 
-#include <nav_msgs/msg/detail/odometry__struct.hpp>
-#include <std_msgs/msg/detail/empty__struct.hpp>
 #include <unitree_ros/unitree_ros.hpp>
 
 #include "unitree_ros/serializers.hpp"
@@ -19,7 +17,6 @@ UnitreeRosNode::UnitreeRosNode() : Node("unitree_ros_node"), unitree_driver() {
 
 UnitreeRosNode::~UnitreeRosNode() {
     RCLCPP_INFO(get_logger(), "Shutting down Unitree ROS node...");
-    unitree_driver.stop();
 }
 
 void UnitreeRosNode::read_parameters() {

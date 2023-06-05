@@ -18,6 +18,12 @@ typedef enum {
     TROT_OBSTACLE = 4,
 } gaitype_enum;
 
+typedef enum {
+    LOW_SPEED = 0,
+    MEDIUM_SPEED = 1,
+    HIGH_SPEED = 2,
+} speed_level_enum;
+
 typedef struct {
     float x;
     float y;

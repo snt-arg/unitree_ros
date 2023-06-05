@@ -1,8 +1,10 @@
-#include <cstdint>
-#include <iostream>
-#include <unitree_ros/unitree_driver.hpp>
+#include <unistd.h>
 
-#include "unitree_ros/unitree_data.hpp"
+#include <cstdint>
+#include <cstring>
+#include <iostream>
+#include <ostream>
+#include <unitree_ros/unitree_driver.hpp>
 
 UnitreeDriver::UnitreeDriver(std::string ip_addr_, int target_port_)
     : udp_connection_(UNITREE_LEGGED_SDK::HIGHLEVEL,
@@ -21,7 +23,7 @@ UnitreeDriver::UnitreeDriver(std::string ip_addr_, int target_port_)
     stand_up();
 }
 
-UnitreeDriver::~UnitreeDriver() { stand_down(); }
+UnitreeDriver::~UnitreeDriver() { stop(); }
 
 // -----------------------------------------------------------------------------
 // -                                 Getters                                   -
@@ -62,10 +64,6 @@ UNITREE_LEGGED_SDK::IMU UnitreeDriver::get_imu() { return high_state.imu; }
 
 UNITREE_LEGGED_SDK::BmsState UnitreeDriver::get_bms() { return high_state.bms; }
 
-std::array<uint8_t, 40> UnitreeDriver::get_remote() {
-    return high_state.wirelessRemote;
-}
-
 // -----------------------------------------------------------------------------
 // -                                  Setters                                  -
 // -----------------------------------------------------------------------------
@@ -82,29 +80,21 @@ void UnitreeDriver::stand_down() {
     std::cout << "STANDIND DOWN" << std::endl;
     walk_w_vel(0, 0, 0);
     set_gaitype(gaitype_enum::GAITYPE_IDDLE);
-    send_high_cmd_();
     set_mode(mode_enum::STAND_DOWN);
-    send_high_cmd_();
     send_high_cmd_();
 }
 
 void UnitreeDriver::stand_up() {
     std::cout << "STANDIND UP" << std::endl;
-    walk_w_vel(0, 0, 0);
     set_gaitype(gaitype_enum::GAITYPE_IDDLE);
     send_high_cmd_();
     set_mode(mode_enum::STAND_UP);
     send_high_cmd_();
-    send_high_cmd_();
 }
 
 void UnitreeDriver::walk_w_vel(float x, float y, float yaw) {
-    high_cmd.mode = mode_enum::WALK_W_VEL;
-    high_cmd.gaitType = curr_gait_type;
-    high_cmd.velocity[0] = x;
-    high_cmd.velocity[1] = y;
-    high_cmd.yawSpeed = yaw;
-    std::cout << "RECEIVED CMD VEL" << std::endl;
+    set_mode(mode_enum::WALK_W_VEL);
+    curr_velocity_cmd = {x, y, yaw};
     send_high_cmd_();
 }
 
@@ -130,7 +120,7 @@ void UnitreeDriver::illuminate_foot_led(UNITREE_LEGGED_SDK::LED led) {
 void UnitreeDriver::damping_mode() {
     recv_high_state_();
     if (high_state.mode == mode_enum::STAND_DOWN) {
-        high_cmd.mode = mode_enum::DAMPING_MODE;
+        set_mode(mode_enum::DAMPING_MODE);
         send_high_cmd_();
     } else {
         std::cout << "Robot is not in STAND_DOWN mode. Make sure to stand down the "
@@ -140,8 +130,10 @@ void UnitreeDriver::damping_mode() {
 }
 
 void UnitreeDriver::stop() {
-    walk_w_vel(0, 0, 0);
     stand_down();
+    std::cout << "Waiting for robot to stand down" << std::endl;
+    sleep(3);
+    std::cout << "Disabling robot motors" << std::endl;
     damping_mode();
 }
 
@@ -152,6 +144,14 @@ void UnitreeDriver::stop() {
 bool UnitreeDriver::is_connection_established_() { return true; }
 
 void UnitreeDriver::send_high_cmd_() {
+    high_cmd.mode = curr_mode;
+    high_cmd.gaitType = curr_gait_type;
+    high_cmd.speedLevel = speed_level;
+
+    high_cmd.velocity[0] = curr_velocity_cmd.x;
+    high_cmd.velocity[1] = curr_velocity_cmd.y;
+    high_cmd.yawSpeed = curr_velocity_cmd.yaw;
+
     udp_connection_.SetSend(high_cmd);
     udp_connection_.Send();
 }

@@ -8,8 +8,8 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
-#include <std_msgs/msg/detail/empty__struct.hpp>
 #include <std_msgs/msg/empty.hpp>
+#include <std_msgs/msg/u_int8_multi_array.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
 
 #include "unitree_ros/unitree_data.hpp"
@@ -38,6 +38,7 @@ class UnitreeRosNode : public rclcpp::Node {
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub;
     rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub;
     rclcpp::Publisher<unitree_ros::msg::BmsState>::SharedPtr bms_pub;
+    rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr remote_pub;
 
     // Subscriptions
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub;
@@ -73,6 +74,7 @@ class UnitreeRosNode : public rclcpp::Node {
     void publish_imu(rclcpp::Time time);
     void publish_bms();
     void publish_odom_tf(rclcpp::Time time, odom_t odom);
+    void publish_remote();
 
     void apply_namespace_to_topic_names();
 };

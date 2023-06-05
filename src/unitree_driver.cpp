@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <iostream>
 #include <unitree_ros/unitree_driver.hpp>
 
@@ -61,6 +62,10 @@ UNITREE_LEGGED_SDK::IMU UnitreeDriver::get_imu() { return high_state.imu; }
 
 UNITREE_LEGGED_SDK::BmsState UnitreeDriver::get_bms() { return high_state.bms; }
 
+std::array<uint8_t, 40> UnitreeDriver::get_remote() {
+    return high_state.wirelessRemote;
+}
+
 // -----------------------------------------------------------------------------
 // -                                  Setters                                  -
 // -----------------------------------------------------------------------------
@@ -74,23 +79,27 @@ void UnitreeDriver::set_gaitype(gaitype_enum gait_type) { curr_gait_type = gait_
 // -----------------------------------------------------------------------------
 
 void UnitreeDriver::stand_down() {
-    std::cout << "STANDIN DOWN" << std::endl;
+    std::cout << "STANDIND DOWN" << std::endl;
     walk_w_vel(0, 0, 0);
     set_gaitype(gaitype_enum::GAITYPE_IDDLE);
+    send_high_cmd_();
     set_mode(mode_enum::STAND_DOWN);
+    send_high_cmd_();
     send_high_cmd_();
 }
 
 void UnitreeDriver::stand_up() {
+    std::cout << "STANDIND UP" << std::endl;
     walk_w_vel(0, 0, 0);
+    set_gaitype(gaitype_enum::GAITYPE_IDDLE);
+    send_high_cmd_();
     set_mode(mode_enum::STAND_UP);
-    set_gaitype(gaitype_enum::TROT_OBSTACLE);
+    send_high_cmd_();
     send_high_cmd_();
 }
 
 void UnitreeDriver::walk_w_vel(float x, float y, float yaw) {
     high_cmd.mode = mode_enum::WALK_W_VEL;
-    std::cout << "Gait Type: " << curr_gait_type << std::endl;
     high_cmd.gaitType = curr_gait_type;
     high_cmd.velocity[0] = x;
     high_cmd.velocity[1] = y;

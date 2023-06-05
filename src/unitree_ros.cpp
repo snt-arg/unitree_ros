@@ -1,7 +1,5 @@
 #include <tf2/LinearMath/Quaternion.h>
 
-#include <nav_msgs/msg/detail/odometry__struct.hpp>
-#include <std_msgs/msg/detail/empty__struct.hpp>
 #include <unitree_ros/unitree_ros.hpp>
 
 #include "unitree_ros/serializers.hpp"
@@ -103,6 +101,7 @@ void UnitreeRosNode::init_publishers() {
     odom_pub = this->create_publisher<nav_msgs::msg::Odometry>(odom_topic_name, qos);
     imu_pub = this->create_publisher<sensor_msgs::msg::Imu>(imu_topic_name, qos);
     bms_pub = this->create_publisher<unitree_ros::msg::BmsState>(bms_topic_name, qos);
+    remote_pub = this->create_publisher<std_msgs::msg::UInt8MultiArray>("remote", qos);
 
     RCLCPP_INFO(get_logger(), "Finished initializing ROS publishers!");
 }
@@ -129,6 +128,7 @@ void UnitreeRosNode::robot_state_callback() {
     publish_imu(now);
     publish_bms();
     publish_odom(now);
+    publish_remote();
 }
 
 void UnitreeRosNode::cmd_vel_reset_callback() {
@@ -197,4 +197,12 @@ void UnitreeRosNode::publish_odom_tf(rclcpp::Time time, odom_t odom) {
     transform.transform.rotation.w = odom.pose.orientation.w;
 
     tf_broadcaster->sendTransform(transform);
+}
+
+void UnitreeRosNode::publish_remote() {
+    std_msgs::msg::UInt8MultiArray data;
+    auto remote = unitree_driver.get_remote();
+    data.data.push_back(remote[2]);
+    data.data.push_back(remote[3]);
+    remote_pub->publish(data);
 }

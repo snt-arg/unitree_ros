@@ -1,6 +1,7 @@
 #include <unistd.h>
 
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <ostream>
@@ -18,6 +19,7 @@ UnitreeDriver::UnitreeDriver(std::string ip_addr_, int target_port_)
 
     // Initialize the high level command and state
     udp_connection_.InitCmdData(high_cmd);
+
     illuminate_foot_led({0, 255, 0});
 
     stand_up();
@@ -141,7 +143,13 @@ void UnitreeDriver::stop() {
 // -                             Private Functions                             -
 // -----------------------------------------------------------------------------
 
-bool UnitreeDriver::is_connection_established_() { return true; }
+bool UnitreeDriver::is_connection_established_() {
+    string cmd = "ping -c1 -s1 ";
+    cmd = cmd + ip_addr + " > /dev/null 2>&1";
+    int exit_status = std::system(cmd.c_str());
+
+    return exit_status == 0 ? true : false;
+}
 
 void UnitreeDriver::send_high_cmd_() {
     high_cmd.mode = curr_mode;

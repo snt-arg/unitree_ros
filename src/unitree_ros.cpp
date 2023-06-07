@@ -12,6 +12,7 @@ UnitreeRosNode::UnitreeRosNode() : Node("unitree_ros_node"), unitree_driver() {
     init_publishers();
     init_timers();
     tf_broadcaster = std::make_unique<tf2_ros::TransformBroadcaster>(this);
+    unitree_driver.enable_obstacle_avoidance(use_obstacle_avoidance);
 
     RCLCPP_INFO(get_logger(), "Unitree ROS node initialized!");
 }

@@ -7,6 +7,8 @@
 #include <ostream>
 #include <unitree_ros/unitree_driver.hpp>
 
+#include "unitree_ros/unitree_data.hpp"
+
 UnitreeDriver::UnitreeDriver(std::string ip_addr_, int target_port_)
     : udp_connection_(UNITREE_LEGGED_SDK::HIGHLEVEL,
                       local_port,
@@ -85,6 +87,10 @@ void UnitreeDriver::set_mode(mode_enum mode) { curr_mode = mode; }
 
 void UnitreeDriver::set_gaitype(gaitype_enum gait_type) { curr_gait_type = gait_type; }
 
+void UnitreeDriver::enable_obstacle_avoidance(bool flag) {
+    use_obstacle_avoidance = flag;
+}
+
 // -----------------------------------------------------------------------------
 // -                             Robot Functions                               -
 // -----------------------------------------------------------------------------
@@ -99,13 +105,20 @@ void UnitreeDriver::stand_down() {
 
 void UnitreeDriver::stand_up() {
     std::cout << "STANDIND UP" << std::endl;
-    set_gaitype(gaitype_enum::GAITYPE_IDDLE);
+    if (use_obstacle_avoidance)
+        set_gaitype(gaitype_enum::TROT_OBSTACLE);
+    else
+        set_gaitype(gaitype_enum::TROT);
     send_high_cmd_();
     set_mode(mode_enum::STAND_UP);
     send_high_cmd_();
 }
 
 void UnitreeDriver::walk_w_vel(float x, float y, float yaw) {
+    if (use_obstacle_avoidance)
+        set_gaitype(gaitype_enum::TROT_OBSTACLE);
+    else
+        set_gaitype(gaitype_enum::TROT);
     set_mode(mode_enum::WALK_W_VEL);
     curr_velocity_cmd = {x, y, yaw};
     send_high_cmd_();

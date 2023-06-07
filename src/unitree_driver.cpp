@@ -23,8 +23,6 @@ UnitreeDriver::UnitreeDriver(std::string ip_addr_, int target_port_)
     // Initialize the high level command and state
     udp_connection_.InitCmdData(high_cmd);
 
-    illuminate_foot_led({0, 255, 0});
-
     stand_up();
 }
 
@@ -132,14 +130,6 @@ void UnitreeDriver::walk_w_pos(position_t position, orientation_t orientation) {
     high_cmd.euler[0] = orientation.x;
     high_cmd.euler[1] = orientation.y;
     high_cmd.euler[2] = orientation.z;
-    send_high_cmd_();
-}
-
-void UnitreeDriver::illuminate_foot_led(UNITREE_LEGGED_SDK::LED led) {
-    high_cmd.led[0] = led;
-    high_cmd.led[1] = led;
-    high_cmd.led[2] = led;
-    high_cmd.led[3] = led;
     send_high_cmd_();
 }
 

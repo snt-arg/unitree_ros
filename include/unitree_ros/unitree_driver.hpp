@@ -56,7 +56,6 @@ class UnitreeDriver {
      */
     void walk_w_pos(position_t position, orientation_t orientation);
     void damping_mode();
-    void illuminate_foot_led(UNITREE_LEGGED_SDK::LED led);
     odom_t get_odom();
     UNITREE_LEGGED_SDK::IMU get_imu();
     UNITREE_LEGGED_SDK::BmsState get_bms();

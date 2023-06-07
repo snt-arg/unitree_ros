@@ -14,7 +14,8 @@ UnitreeDriver::UnitreeDriver(std::string ip_addr_, int target_port_)
                       target_port_) {
     // Check if the connection is established
     if (!is_connection_established_()) {
-        throw std::runtime_error("Connection to the robot could not be established!");
+        throw std::runtime_error(
+            "Connection to the robot could not be established, shutting down.");
     }
 
     // Initialize the high level command and state
@@ -144,11 +145,17 @@ void UnitreeDriver::stop() {
 // -----------------------------------------------------------------------------
 
 bool UnitreeDriver::is_connection_established_() {
+    std::cout << "Checking if robot connection is availble" << std::endl;
     string cmd = "ping -c1 -s1 ";
     cmd = cmd + ip_addr + " > /dev/null 2>&1";
     int exit_status = std::system(cmd.c_str());
 
-    return exit_status == 0 ? true : false;
+    if (exit_status == 0) {
+        std::cout << "Connection is available" << std::endl;
+        return true;
+    }
+    std::cout << "Connection is not available" << std::endl;
+    return false;
 }
 
 void UnitreeDriver::send_high_cmd_() {

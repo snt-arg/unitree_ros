@@ -3,7 +3,6 @@
 #include <unitree_ros/unitree_ros.hpp>
 
 #include "unitree_ros/serializers.hpp"
-#include "unitree_ros/unitree_data.hpp"
 
 UnitreeRosNode::UnitreeRosNode() : Node("unitree_ros_node"), unitree_driver() {
     read_parameters();

@@ -15,5 +15,5 @@ unitree_ros_node:
     odom_frame_id: 'odom'
     odom_child_frame_id: 'base_footprint'
     # Flags
-    use_obstacle_avoidance: true
+    use_obstacle_avoidance: false
     low_batt_shutdown_threshold: 20 # battery range is [0-100]%

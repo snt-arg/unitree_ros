@@ -47,11 +47,16 @@ class UnitreeRosNode : public rclcpp::Node {
     // Timers
     rclcpp::TimerBase::SharedPtr robot_state_timer;
     rclcpp::TimerBase::SharedPtr cmd_vel_reset_timer;
+    rclcpp::TimerBase::SharedPtr check_robot_battery_timer_;
     rclcpp::Time prev_cmd_vel_sent;
     rclcpp::Clock clock;
 
     // TF
     std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster;
+
+    // Flags
+    uint8_t low_batt_shutdown_threshold = 20;
+    bool use_obstacle_avoidance = false;
 
    public:
     UnitreeRosNode();
@@ -65,6 +70,7 @@ class UnitreeRosNode : public rclcpp::Node {
 
     void cmd_vel_callback(const geometry_msgs::msg::Twist::UniquePtr msg);
     void robot_state_callback();
+    void check_robot_battery_callback_();
     void cmd_vel_reset_callback();
     void stand_up_callback(const std_msgs::msg::Empty::UniquePtr msg);
     void stand_down_callback(const std_msgs::msg::Empty::UniquePtr msg);

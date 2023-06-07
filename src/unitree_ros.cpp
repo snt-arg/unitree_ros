@@ -1,5 +1,7 @@
 #include <tf2/LinearMath/Quaternion.h>
 
+#include <rclcpp/logging.hpp>
+#include <stdexcept>
 #include <unitree_ros/unitree_ros.hpp>
 
 #include "unitree_ros/serializers.hpp"
@@ -52,6 +54,14 @@ void UnitreeRosNode::read_parameters() {
     get_parameter("odom_frame_id", odom_frame_id);
     get_parameter("odom_child_frame_id", odom_child_frame_id);
     get_parameter("imu_frame_id", imu_frame_id);
+
+    // Flags
+    declare_parameter<uint8_t>("low_batt_shutdown_threshold",
+                               low_batt_shutdown_threshold);
+    declare_parameter<bool>("use_obstacle_avoidance", use_obstacle_avoidance);
+    // --------------------------------------------------------
+    get_parameter("low_batt_shutdown_threshold", low_batt_shutdown_threshold);
+    get_parameter("use_obstacle_avoidance", use_obstacle_avoidance);
 
     apply_namespace_to_topic_names();
     RCLCPP_INFO(get_logger(), "Finished reading ROS parameters!");
@@ -112,12 +122,28 @@ void UnitreeRosNode::init_timers() {
     cmd_vel_reset_timer = this->create_wall_timer(
         1ms, std::bind(&UnitreeRosNode::cmd_vel_reset_callback, this));
 
+    check_robot_battery_timer_ = this->create_wall_timer(
+        1min, std::bind(&UnitreeRosNode::check_robot_battery_callback_, this));
+
     RCLCPP_INFO(get_logger(), "Finished initializing ROS timers!");
 }
 
 void UnitreeRosNode::cmd_vel_callback(const geometry_msgs::msg::Twist::UniquePtr msg) {
     unitree_driver.walk_w_vel(msg->linear.x, msg->linear.y, msg->angular.z);
     prev_cmd_vel_sent = clock.now();
+}
+
+void UnitreeRosNode::check_robot_battery_callback_() {
+    auto batt_level = unitree_driver.get_battery_percentage();
+    if (batt_level < low_batt_shutdown_threshold) {
+        // Battery is low, Stand down the robot
+        RCLCPP_ERROR(this->get_logger(),
+                     "Robot battery level is low. Currently at: %hhu%%",
+                     batt_level);
+        unitree_driver.stop();
+        throw std::runtime_error("Robot battery low. Shutting down Driver Node");
+    }
+    RCLCPP_INFO(this->get_logger(), "Robot battery level is at: %hhu%%", batt_level);
 }
 
 void UnitreeRosNode::robot_state_callback() {

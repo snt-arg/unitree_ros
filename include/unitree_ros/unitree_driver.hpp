@@ -10,7 +10,7 @@
 class UnitreeDriver {
     // UDP Connection
    private:
-    std::string ip_addr = "192.168.12.1";
+    std::string ip_addr = "192.168.123.161";
     int target_port = 8082;
     int local_port = 8090;
     UNITREE_LEGGED_SDK::UDP udp_connection_;
@@ -26,7 +26,7 @@ class UnitreeDriver {
     uint8_t speed_level = speed_level_enum::LOW_SPEED;
 
    public:
-    UnitreeDriver(std::string ip_addr_ = "192.168.12.1", int target_port_ = 8082);
+    UnitreeDriver(std::string ip_addr_ = "192.168.123.161", int target_port_ = 8082);
     ~UnitreeDriver();
     /**
      * @brief Stand down the robot

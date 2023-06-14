@@ -4,7 +4,7 @@ unitree_ros_node:
     ns: ''
 
     # Robot parameters
-    robot_ip: '192.168.12.1'
+    robot_ip: '192.168.123.161'
     robot_target_port: 8082
     # Topic names
     cmd_vel_topic_name: '/cmd_vel'

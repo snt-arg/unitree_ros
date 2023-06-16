@@ -5,6 +5,7 @@
 #include <tf2_ros/transform_broadcaster.h>
 
 #include <geometry_msgs/msg/twist.hpp>
+#include <memory>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
@@ -18,7 +19,7 @@
 class UnitreeRosNode : public rclcpp::Node {
    private:
     // Robot
-    UnitreeDriver unitree_driver_;
+    std::unique_ptr<UnitreeDriver> unitree_driver_;
     std::string robot_ip_ = "";
     int robot_target_port_ = 0;
 

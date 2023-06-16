@@ -1,18 +1,20 @@
 #include <tf2/LinearMath/Quaternion.h>
 
+#include <memory>
 #include <rclcpp/logging.hpp>
 #include <stdexcept>
 #include <unitree_ros/unitree_ros.hpp>
 
 #include "unitree_ros/serializers.hpp"
 
-UnitreeRosNode::UnitreeRosNode() : Node("unitree_ros_node"), unitree_driver_() {
+UnitreeRosNode::UnitreeRosNode() : Node("unitree_ros_node") {
     read_parameters_();
     init_subscriptions_();
     init_publishers_();
     init_timers_();
+    unitree_driver_ = std::make_unique<UnitreeDriver>(robot_ip_, robot_target_port_);
     tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(this);
-    unitree_driver_.enable_obstacle_avoidance(use_obstacle_avoidance_);
+    unitree_driver_->enable_obstacle_avoidance(use_obstacle_avoidance_);
 
     RCLCPP_INFO(get_logger(), "Unitree ROS node initialized!");
 }
@@ -91,18 +93,18 @@ void UnitreeRosNode::init_timers_() {
 // -----------------------------------------------------------------------------
 
 void UnitreeRosNode::cmd_vel_callback_(const geometry_msgs::msg::Twist::UniquePtr msg) {
-    unitree_driver_.walk_w_vel(msg->linear.x, msg->linear.y, msg->angular.z);
+    unitree_driver_->walk_w_vel(msg->linear.x, msg->linear.y, msg->angular.z);
     prev_cmd_vel_sent_ = clock_.now();
 }
 
 void UnitreeRosNode::check_robot_battery_callback_() {
-    auto batt_level = unitree_driver_.get_battery_percentage();
+    auto batt_level = unitree_driver_->get_battery_percentage();
     if (batt_level < low_batt_shutdown_threshold_) {
         // Battery is low, Stand down the robot
         RCLCPP_ERROR(this->get_logger(),
                      "Robot battery level is low. Currently at: %hhu%%",
                      batt_level);
-        unitree_driver_.stop();
+        unitree_driver_->stop();
         throw std::runtime_error("Robot battery low. Shutting down Driver Node");
     }
     RCLCPP_INFO(this->get_logger(), "Robot battery level is at: %hhu%%", batt_level);
@@ -118,17 +120,17 @@ void UnitreeRosNode::robot_state_callback_() {
 void UnitreeRosNode::cmd_vel_reset_callback_() {
     auto delta_t = clock_.now() - prev_cmd_vel_sent_;
     if (delta_t >= 400ms && delta_t <= 402ms) {
-        unitree_driver_.walk_w_vel(0, 0, 0);
+        unitree_driver_->walk_w_vel(0, 0, 0);
     }
 }
 
 void UnitreeRosNode::stand_up_callback_(const std_msgs::msg::Empty::UniquePtr msg) {
     msg.get();  // Just to ignore linter warning
-    unitree_driver_.stand_up();
+    unitree_driver_->stand_up();
 }
 void UnitreeRosNode::stand_down_callback_(const std_msgs::msg::Empty::UniquePtr msg) {
     msg.get();  // Just to ignore linter warning
-    unitree_driver_.stand_down();
+    unitree_driver_->stand_down();
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +138,7 @@ void UnitreeRosNode::stand_down_callback_(const std_msgs::msg::Empty::UniquePtr 
 // -----------------------------------------------------------------------------
 
 void UnitreeRosNode::publish_odom_(rclcpp::Time time) {
-    odom_t odom = unitree_driver_.get_odom();
+    odom_t odom = unitree_driver_->get_odom();
 
     tf2::Quaternion q;
     q.setRPY(odom.pose.orientation.x, odom.pose.orientation.y, odom.pose.orientation.z);
@@ -158,13 +160,13 @@ void UnitreeRosNode::publish_imu_(rclcpp::Time time) {
     sensor_msgs::msg::Imu imu_msg;
     imu_msg.header.stamp = time;
     imu_msg.header.frame_id = imu_frame_id_;
-    serialize(imu_msg, unitree_driver_.get_imu());
+    serialize(imu_msg, unitree_driver_->get_imu());
     imu_pub_->publish(imu_msg);
 }
 
 void UnitreeRosNode::publish_bms_() {
     unitree_ros::msg::BmsState bms_msg;
-    serialize(bms_msg, unitree_driver_.get_bms());
+    serialize(bms_msg, unitree_driver_->get_bms());
     bms_pub_->publish(bms_msg);
 }
 

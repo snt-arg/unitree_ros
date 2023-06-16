@@ -10,9 +10,9 @@
 class UnitreeDriver {
     // Unitree SDK related
    private:
-    std::string ip_addr = "192.168.123.161";
-    int target_port = 8082;
-    int local_port = 8090;
+    std::string ip_addr_ = "192.168.123.161";
+    int target_port_ = 8082;
+    int local_port_ = 8090;
     UNITREE_LEGGED_SDK::UDP udp_connection_;
 
     UNITREE_LEGGED_SDK::HighCmd high_cmd_ = {};
@@ -33,7 +33,7 @@ class UnitreeDriver {
      * 192.168.12.1)
      * @param target_port_: Port to be used to communicate with robot (default: 8082)
      */
-    UnitreeDriver(std::string ip_addr_ = "192.168.123.161", int target_port_ = 8082);
+    UnitreeDriver(std::string ip_addr = "192.168.123.161", int target_port = 8082);
     ~UnitreeDriver();
 
     /**

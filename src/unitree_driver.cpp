@@ -10,7 +10,9 @@
 #include "unitree_ros/unitree_data.hpp"
 
 UnitreeDriver::UnitreeDriver(std::string ip_addr, int target_port)
-    : udp_connection_(UNITREE_LEGGED_SDK::HIGHLEVEL,
+    : ip_addr_(ip_addr),
+      target_port_(target_port),
+      udp_connection_(UNITREE_LEGGED_SDK::HIGHLEVEL,
                       local_port_,
                       ip_addr.c_str(),
                       target_port) {
@@ -169,7 +171,7 @@ bool UnitreeDriver::is_connection_established_() {
         std::cout << "Connection is available" << std::endl;
         return true;
     }
-    std::cout << "Connection is not available" << std::endl;
+    std::cout << "CONNECTION IS NOT AVAILABLE" << std::endl;
     return false;
 }
 

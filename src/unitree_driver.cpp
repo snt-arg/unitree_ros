@@ -15,7 +15,7 @@ UnitreeDriver::UnitreeDriver(std::string ip_addr, int target_port)
                       ip_addr.c_str(),
                       target_port) {
     // Check if the connection is established
-    if (!is_connection_established_()) {
+    if (!s_connection_established_()) {
         throw std::runtime_error(
             "Connection to the robot could not be established, shutting down.");
     }

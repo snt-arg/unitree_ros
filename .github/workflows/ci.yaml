@@ -2,7 +2,7 @@ on: [push]
 jobs:
   build_ros_package:
     runs-on: ubuntu-latest
-    container: 
+    container:
       image: pedros235/unitree_ros:latest
     steps:
       - name: Go to repo
@@ -15,5 +15,4 @@ jobs:
         run: cd ../../
 
       - name: Build
-        run: source /opt/ros/foxy/setup.bash
-        run: colcon build
+        run: source /opt/ros/foxy/setup.bash && colcon build

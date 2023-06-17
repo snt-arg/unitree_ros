@@ -5,6 +5,8 @@ jobs:
     container:
       image: pedros235/unitree_ros:latest
     steps:
-      - name: Build
+      - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Build
         run: source /opt/ros/foxy/setup.bash && colcon build

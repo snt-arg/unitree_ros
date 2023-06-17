@@ -28,3 +28,5 @@ WORKDIR /root/unitree_ws/
 RUN . /opt/ros/foxy/setup.sh && \
     rosdep update && \
     rosdep install --from-paths src --ignore-src -r -y
+
+WORKDIR /root/unitree_ws/src/unitree_ros

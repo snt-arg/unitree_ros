@@ -8,8 +8,8 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
-#include <std_msgs/msg/detail/empty__struct.hpp>
 #include <std_msgs/msg/empty.hpp>
+#include <std_msgs/msg/u_int8_multi_array.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
 
 #include "unitree_ros/unitree_data.hpp"
@@ -18,63 +18,71 @@
 class UnitreeRosNode : public rclcpp::Node {
    private:
     // Robot
-    UnitreeDriver unitree_driver;
-    std::string robot_ip = "";
-    int robot_target_port = 0;
+    UnitreeDriver unitree_driver_;
+    std::string robot_ip_ = "";
+    int robot_target_port_ = 0;
 
     // Topic Names
-    std::string ns = "";  // namespace
-    std::string cmd_vel_topic_name = ns + "/cmd_vel";
-    std::string odom_topic_name = ns + "/odom";
-    std::string imu_topic_name = ns + "/imu";
-    std::string bms_topic_name = ns + "/bms";
+    std::string ns_ = "";  // namespace
+    std::string cmd_vel_topic_name_ = ns_ + "/cmd_vel";
+    std::string odom_topic_name_ = ns_ + "/odom";
+    std::string imu_topic_name_ = ns_ + "/imu";
+    std::string bms_topic_name_ = ns_ + "/bms";
 
     // Frame Ids
-    std::string odom_frame_id = ns + "odom";
-    std::string odom_child_frame_id = ns + "base_link";
-    std::string imu_frame_id = ns + "imu";
+    std::string odom_frame_id_ = ns_ + "odom";
+    std::string odom_child_frame_id_ = ns_ + "base_link";
+    std::string imu_frame_id_ = ns_ + "imu";
 
     // Publishers
-    rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub;
-    rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub;
-    rclcpp::Publisher<unitree_ros::msg::BmsState>::SharedPtr bms_pub;
+    rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
+    rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub_;
+    rclcpp::Publisher<unitree_ros::msg::BmsState>::SharedPtr bms_pub_;
 
     // Subscriptions
-    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub;
-    rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr stand_up_sub;
-    rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr stand_down_sub;
+    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
+    rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr stand_up_sub_;
+    rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr stand_down_sub_;
 
     // Timers
-    rclcpp::TimerBase::SharedPtr robot_state_timer;
-    rclcpp::TimerBase::SharedPtr cmd_vel_reset_timer;
-    rclcpp::Time prev_cmd_vel_sent;
-    rclcpp::Clock clock;
+    rclcpp::TimerBase::SharedPtr robot_state_timer_;
+    rclcpp::TimerBase::SharedPtr cmd_vel_reset_timer_;
+    rclcpp::TimerBase::SharedPtr check_robot_battery_timer_;
+    rclcpp::Time prev_cmd_vel_sent_;
+    rclcpp::Clock clock_;
 
     // TF
-    std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster;
+    std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+
+    // Flags
+    uint8_t low_batt_shutdown_threshold_ = 20;
+    bool use_obstacle_avoidance_ = false;
 
    public:
     UnitreeRosNode();
     ~UnitreeRosNode();
 
    private:
-    void read_parameters();
-    void init_subscriptions();
-    void init_publishers();
-    void init_timers();
+    void read_parameters_();
 
-    void cmd_vel_callback(const geometry_msgs::msg::Twist::UniquePtr msg);
-    void robot_state_callback();
-    void cmd_vel_reset_callback();
-    void stand_up_callback(const std_msgs::msg::Empty::UniquePtr msg);
-    void stand_down_callback(const std_msgs::msg::Empty::UniquePtr msg);
+    void init_subscriptions_();
+    void init_publishers_();
+    void init_timers_();
 
-    void publish_odom(rclcpp::Time time);
-    void publish_imu(rclcpp::Time time);
-    void publish_bms();
-    void publish_odom_tf(rclcpp::Time time, odom_t odom);
+    void cmd_vel_callback_(const geometry_msgs::msg::Twist::UniquePtr msg);
+    void robot_state_callback_();
+    void check_robot_battery_callback_();
+    void cmd_vel_reset_callback_();
+    void stand_up_callback_(const std_msgs::msg::Empty::UniquePtr msg);
+    void stand_down_callback_(const std_msgs::msg::Empty::UniquePtr msg);
 
-    void apply_namespace_to_topic_names();
+    void publish_odom_(rclcpp::Time time);
+    void publish_imu_(rclcpp::Time time);
+    void publish_bms_();
+    void publish_odom_tf_(rclcpp::Time time, odom_t odom);
+    void publish_remote_();
+
+    void apply_namespace_to_topic_names_();
 };
 
 #endif  // !UNITREE_ROS_HPP

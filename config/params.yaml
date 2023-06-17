@@ -2,7 +2,6 @@ unitree_ros_node:
   ros__parameters:
     # namespace
     ns: ''
-
     # Robot parameters
     robot_ip: '192.168.12.1'
     robot_target_port: 8082
@@ -15,3 +14,6 @@ unitree_ros_node:
     imu_frame_id: 'imu'
     odom_frame_id: 'odom'
     odom_child_frame_id: 'base_footprint'
+    # Flags
+    use_obstacle_avoidance: false
+    low_batt_shutdown_threshold: 20 # battery range is [0-100]%

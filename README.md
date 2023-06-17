@@ -3,11 +3,6 @@ This ROS2 package provides a driver for controlling the Unitree Go1 robot. The U
 
 This package provides a set of ROS2 topics which are defined in the [ROS Topics](#ros-topics) section, as well as a set of custom messages which were retrieved from  [unitree_ros_to_real](https://github.com/unitreerobotics/unitree_ros_to_real) repository.
 
-
-# unitree_ros
-This is a ros2 package with the purpose of controlling an Unitree Go1 legged robot.
-This package makes use of the [unitree_legged_sdk](https://github.com/unitreerobotics/unitree_legged_sdk) repositories.
-
 # Dependencies
 This package depends on ROS2, the `foxy` distribution, which in turn need Ubuntu `20.04`.
 

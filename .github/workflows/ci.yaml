@@ -2,7 +2,8 @@ on: [push]
 jobs:
   build_ros_package:
     runs-on: ubuntu-latest
-      container: pedros235/unitree_ros:latest
+      container: 
+        image: pedros235/unitree_ros:latest
       steps:
         - name: Go to repo
           run: cd src/unitree_ros

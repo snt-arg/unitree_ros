@@ -20,8 +20,8 @@ class UnitreeRosNode : public rclcpp::Node {
    private:
     // Robot
     std::unique_ptr<UnitreeDriver> unitree_driver_;
-    std::string robot_ip_ = "";
-    int robot_target_port_ = 0;
+    std::string robot_ip_ = "192.168.123.161";
+    int robot_target_port_ = 8082;
 
     // Topic Names
     std::string ns_ = "";  // namespace

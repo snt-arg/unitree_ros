@@ -212,10 +212,8 @@ void UnitreeDriver::blink_face_led(uint8_t r, uint8_t g, uint8_t b) {
 
 void UnitreeDriver::show_robot_status() {
     while (!face_led_thread_stop_flag_) {
-        printf("Robot Status\n");
         switch (robot_status) {
             case robot_status_e::READY:
-                printf("Robot Status: READY\n");
                 blink_face_led(0, 255, 0);
                 break;
             case robot_status_e::IDDLE:

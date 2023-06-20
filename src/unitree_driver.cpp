@@ -7,13 +7,20 @@
 #include <ostream>
 #include <unitree_ros/unitree_driver.hpp>
 
+#include "FaceLightClient.h"
+#include "unitree_legged_sdk/comm.h"
 #include "unitree_ros/unitree_data.hpp"
 
 UnitreeDriver::UnitreeDriver(std::string ip_addr, int target_port)
-    : udp_connection_(UNITREE_LEGGED_SDK::HIGHLEVEL,
+    : ip_addr_(ip_addr),
+      target_port_(target_port),
+      udp_connection_(UNITREE_LEGGED_SDK::HIGHLEVEL,
                       local_port_,
                       ip_addr.c_str(),
-                      target_port) {
+                      target_port),
+      light_client_(),
+      face_led_thread_(&UnitreeDriver::show_robot_status, this),
+      face_led_thread_stop_flag_(false) {
     // Check if the connection is established
     if (!is_connection_established_()) {
         throw std::runtime_error(
@@ -22,11 +29,16 @@ UnitreeDriver::UnitreeDriver(std::string ip_addr, int target_port)
 
     // Initialize the high level command and state
     udp_connection_.InitCmdData(high_cmd_);
+    set_head_led(255, 255, 255);
 
     stand_up();
 }
 
-UnitreeDriver::~UnitreeDriver() { stop(); }
+UnitreeDriver::~UnitreeDriver() {
+    face_led_thread_stop_flag_ = true;
+    face_led_thread_.join();
+    stop();
+}
 
 // -----------------------------------------------------------------------------
 // -                                 Getters                                   -
@@ -87,6 +99,8 @@ void UnitreeDriver::stand_down() {
     set_gaitype(gaitype_enum::GAITYPE_IDDLE);
     set_mode(mode_enum::STAND_DOWN);
     send_high_cmd_();
+    robot_status = robot_status_e::IDDLE;
+    set_head_led(255, 255, 255);
 }
 
 void UnitreeDriver::stand_up() {
@@ -97,9 +111,12 @@ void UnitreeDriver::stand_up() {
         set_gaitype(gaitype_enum::TROT);
     set_mode(mode_enum::STAND_UP);
     send_high_cmd_();
+    robot_status = robot_status_e::READY;
+    set_head_led(0, 255, 0);
 }
 
 void UnitreeDriver::walk_w_vel(float x, float y, float yaw) {
+    robot_status = robot_status_e::MOVING;
     if (use_obstacle_avoidance_)
         set_gaitype(gaitype_enum::TROT_OBSTACLE);
     else
@@ -110,6 +127,7 @@ void UnitreeDriver::walk_w_vel(float x, float y, float yaw) {
 }
 
 void UnitreeDriver::walk_w_pos(position_t position, orientation_t orientation) {
+    robot_status = robot_status_e::MOVING;
     if (use_obstacle_avoidance_)
         set_gaitype(gaitype_enum::TROT_OBSTACLE);
     else
@@ -143,6 +161,18 @@ void UnitreeDriver::stop() {
     damping_mode();
 }
 
+void UnitreeDriver::set_head_led(UNITREE_LEGGED_SDK::LED led) {
+    const uint8_t color[3] = {led.r, led.g, led.b};
+    light_client_.setAllLed(color);
+    light_client_.sendCmd();
+}
+
+void UnitreeDriver::set_head_led(uint8_t r, uint8_t g, uint8_t b) {
+    const uint8_t color[3] = {r, g, b};
+    light_client_.setAllLed(color);
+    light_client_.sendCmd();
+}
+
 // -----------------------------------------------------------------------------
 // -                             Private Functions                             -
 // -----------------------------------------------------------------------------
@@ -169,8 +199,37 @@ bool UnitreeDriver::is_connection_established_() {
         std::cout << "Connection is available" << std::endl;
         return true;
     }
-    std::cout << "Connection is not available" << std::endl;
+    std::cout << "CONNECTION IS NOT AVAILABLE" << std::endl;
     return false;
+}
+
+void UnitreeDriver::blink_face_led(uint8_t r, uint8_t g, uint8_t b) {
+    set_head_led(r, g, b);
+    sleep(1);
+    set_head_led(0, 0, 0);
+    sleep(1);
+}
+
+void UnitreeDriver::show_robot_status() {
+    while (!face_led_thread_stop_flag_) {
+        switch (robot_status) {
+            case robot_status_e::READY:
+                blink_face_led(0, 255, 0);
+                break;
+            case robot_status_e::IDDLE:
+                blink_face_led(255, 255, 255);
+                break;
+            case robot_status_e::MOVING:
+                blink_face_led(0, 170, 255);
+                break;
+            case robot_status_e::BATTERY_LOW:
+                blink_face_led(255, 200, 0);
+                break;
+            case robot_status_e::ERROR:
+                blink_face_led(255, 0, 0);
+                break;
+        }
+    }
 }
 
 void UnitreeDriver::send_high_cmd_() {

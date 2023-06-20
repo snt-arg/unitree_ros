@@ -5,6 +5,7 @@
 #include <tf2_ros/transform_broadcaster.h>
 
 #include <geometry_msgs/msg/twist.hpp>
+#include <memory>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
@@ -18,9 +19,9 @@
 class UnitreeRosNode : public rclcpp::Node {
    private:
     // Robot
-    UnitreeDriver unitree_driver_;
-    std::string robot_ip_ = "";
-    int robot_target_port_ = 0;
+    std::unique_ptr<UnitreeDriver> unitree_driver_;
+    std::string robot_ip_ = "192.168.123.161";
+    int robot_target_port_ = 8082;
 
     // Topic Names
     std::string ns_ = "";  // namespace
@@ -46,6 +47,7 @@ class UnitreeRosNode : public rclcpp::Node {
 
     // Timers
     rclcpp::TimerBase::SharedPtr robot_state_timer_;
+    rclcpp::TimerBase::SharedPtr robot_status_led_timer_;
     rclcpp::TimerBase::SharedPtr cmd_vel_reset_timer_;
     rclcpp::TimerBase::SharedPtr check_robot_battery_timer_;
     rclcpp::Time prev_cmd_vel_sent_;
@@ -71,6 +73,7 @@ class UnitreeRosNode : public rclcpp::Node {
 
     void cmd_vel_callback_(const geometry_msgs::msg::Twist::UniquePtr msg);
     void robot_state_callback_();
+    void robot_status_led_callback_();
     void check_robot_battery_callback_();
     void cmd_vel_reset_callback_();
     void stand_up_callback_(const std_msgs::msg::Empty::UniquePtr msg);

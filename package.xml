@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>unitree_ros</name>
-  <version>0.1.5</version>
+  <version>0.1.7</version>
   <description>Unitree ros package</description>
   <maintainer email="pmbs.123@gmail.com">Pedro Soares</maintainer>
   <license>TODO: License declaration</license>

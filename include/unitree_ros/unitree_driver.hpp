@@ -1,6 +1,7 @@
 #ifndef UNITREE_DRIVER_H
 #define UNITREE_DRIVER_H
 
+#include <FaceLightClient.h>
 #include <unitree_legged_sdk/unitree_legged_sdk.h>
 
 #include <unitree_ros/unitree_data.hpp>
@@ -10,7 +11,7 @@
 class UnitreeDriver {
     // Unitree SDK related
    private:
-    std::string ip_addr_ = "192.168.12.1";
+    std::string ip_addr_ = "192.168.123.161";
     int target_port_ = 8082;
     int local_port_ = 8090;
     UNITREE_LEGGED_SDK::UDP udp_connection_;
@@ -25,6 +26,14 @@ class UnitreeDriver {
     uint8_t speed_level_ = speed_level_enum::LOW_SPEED;
     bool use_obstacle_avoidance_ = false;
 
+    // Faceled
+    FaceLightClient light_client_;
+
+    // Robot status
+    std::thread face_led_thread_;
+    std::atomic<bool> face_led_thread_stop_flag_;
+    robot_status_e robot_status = robot_status_e::IDDLE;
+
    public:
     /**
      * @brief Constructor of the class UnitreeDriver.
@@ -33,7 +42,7 @@ class UnitreeDriver {
      * 192.168.12.1)
      * @param target_port_: Port to be used to communicate with robot (default: 8082)
      */
-    UnitreeDriver(std::string ip_addr = "192.168.12.1", int target_port = 8082);
+    UnitreeDriver(std::string ip_addr = "192.168.123.161", int target_port = 8082);
     ~UnitreeDriver();
 
     /**
@@ -149,6 +158,10 @@ class UnitreeDriver {
      */
     void stop();
 
+    void set_head_led(uint8_t r, uint8_t g, uint8_t b);
+    void set_head_led(UNITREE_LEGGED_SDK::LED led);
+    void show_robot_status();
+
    private:
     /**
      * @brief Sends the current High level command to the robot.
@@ -182,6 +195,9 @@ class UnitreeDriver {
      * @brief Helper method to retrieve robot's velocity from High State
      */
     velocity_t get_velocity_();
+
+    void blink_face_led(uint8_t r, uint8_t g, uint8_t b);
+    void blink_face_led(UNITREE_LEGGED_SDK::LED led);
 };
 
 #endif  // !#ifndef UNITREE_DRIVER_H

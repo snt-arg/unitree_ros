@@ -38,11 +38,14 @@ else()
 endif()
 
 link_directories(${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/lib/cpp/${ARCH})
-set(EXTRA_LIBS -pthread libunitree_legged_sdk.so)
-set(CMAKE_CXX_FLAGS "-O3 -fPIC")
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/utils/faceLightSDK_Nano/lib)
+set(EXTRA_LIBS -pthread unitree_legged_sdk)
+set(CMAKE_CXX_FLAGS "-O3 -march=native -Wall -fPIC")
 
 include_directories(include 
                    ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include)
+include_directories(include 
+                   ${CMAKE_SOURCE_DIR}/utils/faceLightSDK_Nano/include)
 
 
 # --------------------------------
@@ -68,7 +71,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 set(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs tf2 tf2_ros)
 
 add_executable(unitree_driver src/unitree_ros_node.cpp src/unitree_ros.cpp src/unitree_driver.cpp src/serializers.cpp)
-target_link_libraries(unitree_driver ${EXTRA_LIBS})
+target_link_libraries(unitree_driver ${EXTRA_LIBS} faceLight_SDK_amd64 )
 ament_target_dependencies(unitree_driver ${DEPENDENCIES})
 rosidl_target_interfaces(unitree_driver ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
@@ -79,7 +82,7 @@ rosidl_target_interfaces(unitree_driver ${PROJECT_NAME} "rosidl_typesupport_cpp"
 # -------------------
 
 install(
-  DIRECTORY include  ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include
+  DIRECTORY include ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include ${CMAKE_SOURCE_DIR}/utils/faceLightSDK_Nano/include
   DESTINATION include
 )
 
@@ -87,7 +90,6 @@ install(
   DIRECTORY config launch
   DESTINATION share/${PROJECT_NAME}
 )
-
 
 install(TARGETS 
   unitree_driver

@@ -37,11 +37,25 @@ typedef enum {
     TROT_OBSTACLE = 4,
 } gaitype_enum;
 
+/**
+ * @brief Enum containing the possible robot speed levels
+ */
 typedef enum {
     LOW_SPEED = 0,
     MEDIUM_SPEED = 1,
     HIGH_SPEED = 2,
 } speed_level_enum;
+
+/**
+ * @brief Enum containing the possible robot status, for LEDs
+ */
+typedef enum {
+    READY,
+    MOVING,
+    IDDLE,
+    BATTERY_LOW,
+    ERROR,
+} robot_status_e;
 
 /**
  * @brief Position data type

@@ -34,9 +34,9 @@ The following status are available:
 
 - `/cmd_vel` [[geometry_mgs/msg/Twist.msg](http://docs.ros.org/en/noetic/api/geometry_msgs/html/msg/Twist.html)]: This is used by the driver to send the velocity commands to the robot.
 
-- `/stand_up` [[std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)]: Triggers the robot to stand up (not yet functional)
+- `/stand_up` [[std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)]: Triggers the robot to stand up
 
-- `/stand_down` [[std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)]: Triggers the robot to stand down (not yet functional)
+- `/stand_down` [[std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)]: Triggers the robot to stand down
 
 ### Publishers
 

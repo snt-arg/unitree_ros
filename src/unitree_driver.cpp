@@ -212,6 +212,9 @@ void UnitreeDriver::blink_face_led(uint8_t r, uint8_t g, uint8_t b) {
 
 void UnitreeDriver::show_robot_status() {
     while (!face_led_thread_stop_flag_) {
+        if (get_battery_percentage() < 30) {
+            robot_status = robot_status_e::BATTERY_LOW;
+        }
         switch (robot_status) {
             case robot_status_e::READY:
                 blink_face_led(0, 255, 0);
@@ -223,7 +226,7 @@ void UnitreeDriver::show_robot_status() {
                 blink_face_led(0, 170, 255);
                 break;
             case robot_status_e::BATTERY_LOW:
-                blink_face_led(255, 200, 0);
+                blink_face_led(255, 112, 0);
                 break;
             case robot_status_e::ERROR:
                 blink_face_led(255, 0, 0);

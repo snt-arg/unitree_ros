@@ -19,8 +19,8 @@ For more information about the different topics this ROS package subscribes or p
 - [Usage](#usage)
 - [Features](#features)
   - [ROS Topics](#ros-topics)
-    - [Subscribers](#subscribers)
-    - [Publishers](#publishers)
+    - [Subscribers](#subscribed-topics)
+    - [Publishers](#published-topis)
   - [Robot LED statuses](#robot-led-statuses)
   - [Low Battery Protection](#low-battery-protection)
   - [Obstacle Avoidance](#obstacle-avoidance)
@@ -104,24 +104,38 @@ ros2 run unitree_ros unitree_driver
 
 ### ROS Topics
 
-#### Subscribers
+#### Subscribed Topics
 
-- `/cmd_vel` [[geometry_mgs/msg/Twist.msg](http://docs.ros.org/en/noetic/api/geometry_msgs/html/msg/Twist.html)]:
-  This is used by the driver to receive velocity commands and send the appropriate commands to the robot.
+| Topic name    | Message Type                                                                                      | Description                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `cmd_vel`     | [geometry_mgs/msg/Twist.msg](http://docs.ros.org/en/noetic/api/geometry_msgs/html/msg/Twist.html) | This is used by the driver to receive velocity commands and send the appropriate commands to the robot. |
+| `/stand_up`   | [std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)         | Triggers the robot to stand up                                                                          |
+| `/stand_down` | [std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)         | Triggers the robot to stand down                                                                        |
 
-- `/stand_up` [[std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)]:
-  Triggers the robot to stand up
+#### Published Topics
 
-- `/stand_down` [[std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)]:
-  Triggers the robot to stand down
+| Topic name | Message Type                                                                                   | Description                                                                  |
+| ---------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `/odom`    | [nav_msgs/msg/Odometry.msg](http://docs.ros.org/en/noetic/api/nav_msgs/html/msg/Odometry.html) | The odometry state received from the robot is being published to this topic. |
+| `/imu`     | [sensor_msgs/msg/IMU.msg](http://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/Imu.html)     | The IMU state received from the robot is being published to this topic.      |
+| `/bms`     | [unitree_ros/msg/bms.msg](https://github.com/snt-arg/unitree_ros/blob/main/msg/BmsState.msg)   | The battery state received from the robot is being published to this topic.  |
 
-#### Publishers
+## ROS Parameters
 
-- `/odom` [[nav_msgs/msg/Odometry.msg](http://docs.ros.org/en/noetic/api/nav_msgs/html/msg/Odometry.html)]: The odometry state received from the robot is being published to this topic.
-
-- `/imu` [[sensor_msgs/msg/IMU.msg](http://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/Imu.html)]: The IMU state received from the robot is being published to this topic.
-
-- `/bms` [[unitree_ros/msg/bms.msg](https://github.com/snt-arg/unitree_ros/blob/main/msg/BmsState.msg)]: The battery state received from the robot is being published to this topic.
+| Parameter Name                | Default value   | Description                                                                                              |
+| ----------------------------- | --------------- | -------------------------------------------------------------------------------------------------------- |
+| `ns`                          | -               | Name space that should be given to robot driver                                                          |
+| `robot_ip`                    | 192.168.123.161 | Robot IP that should be used to establish the UDP connection. For a Wi-Fi conntection use `192.168.12.1` |
+| `robot_target_port`           | 8082            | The port that should be used to communicate with the robot.                                              |
+| `cmd_vel_topic_name`          | /cmd_vel        | Topic name that should be used for subscribing to velocity commands                                      |
+| `odom_topic_name`             | /odom           | Topic name that should be used for publishing the odometry state                                         |
+| `imu_topic_name`              | /imu            | Topic name that should be used for publishing the IMU state                                              |
+| `bms_state_topic_name`        | /bms_state      | Topic name that should be used for publishing the battery management state, such as battery level.       |
+| `imu_frame_id`                | imu             | Frame id that should be used for the IMU frame                                                           |
+| `odom_frame_id`               | odom            | Frame id that should be used for the odometry frame                                                      |
+| `odom_child_frame_id`         | base_footprint  | Frame id of the body of the robot                                                                        |
+| `use_obstacle_avoidance`      | false           | Enables (true) or disables (false) the robot obstacle avoidance.                                         |
+| `low_batt_shutdown_threshold` | 20              | Battery threshold for when to stop the robot from moving, in case the battery is below                   |
 
 ### Robot LED statuses
 

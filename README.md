@@ -64,8 +64,8 @@ After having build the workspace, you should now be able to use the driver to co
 
 - [unitree_ros_to_real](https://github.com/unitreerobotics/unitree_ros_to_real): This is a ROS1 package provided by the Unitree robotics. The ROS messages have been adapted for ROS2 support.
 
-- **`faceLightSDK_nano`**: This is the SDK that can be found on the internal computers of the Unitree Go1. It has been ported to this ROS package with the goal of begin able of controlling the face LEDs, which are used to 
-give some robot status.
+- **`faceLightSDK_nano`**: This is the SDK that can be found on the internal computers of the Unitree Go1. It has been ported to this ROS package with the goal of being able to control the face LEDs, which are used to 
+give some robot statuses.
 
 
 ## Usage
@@ -79,16 +79,22 @@ robot_ip: '192.168.123.161' # Change to 192.168.12.1 for WIFI
 ```
 to
 ```yaml
-robot_ip: '192.168.12.1' # Change to 192.168.12.1 for WIFI
+robot_ip: '192.168.12.1' # Change to 192.168.123.161 for wired
 ```
 
 In addition, you might want to change some of the other parameters available, such as the topic names.
 
 After having set the correct robot IP address, you are now able to run the driver. To do so, a launch file
-is available, which make it easier. Run the following commands to launch the driver.
+is available, which makes it easier. Run the following commands to launch the driver.
 ```sh
 source ~/unitree_ws/install/setup.bash # or zsh if using the zsh shell!
 ros2 launch unitree_ros unitree_driver_launch.py
+```
+
+In case you do not want to use the launch file, just proceed with the following commands:
+```sh
+source ~/unitree_ws/install/setup.bash # or zsh if using the zsh shell!
+ros2 run unitree_ros unitree_driver
 ```
 
 ## Features
@@ -108,7 +114,7 @@ Triggers the robot to stand down
 
 #### Publishers
 
-- `/odom` [[nav_msgs/msg/Odometry.msg](http://docs.ros.org/en/noetic/api/nav_msgs/html/msg/Odometry.html)]: The odometry received from the robot is being published to this topic.
+- `/odom` [[nav_msgs/msg/Odometry.msg](http://docs.ros.org/en/noetic/api/nav_msgs/html/msg/Odometry.html)]: The odometry state received from the robot is being published to this topic.
 
 - `/imu` [[sensor_msgs/msg/IMU.msg](http://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/Imu.html)]: The IMU state received from the robot is being published to this topic.
 

@@ -14,6 +14,27 @@ For more information about the different topics this ROS package subscribes or p
 
 ## Table of Contents
 
+<!--toc:start-->
+- [Unitree Go1 ROS2 Driver](#unitree-go1-ros2-driver)
+  - [Description](#description)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+      - [Dependencies](#dependencies)
+  - [Usage](#usage)
+  - [Features](#features)
+    - [ROS Topics](#ros-topics)
+      - [Subscribers](#subscribers)
+      - [Publishers](#publishers)
+    - [Robot LED statuses](#robot-led-statuses)
+    - [Low Battery Protection](#low-battery-protection)
+    - [Obstacle Avoidance](#obstacle-avoidance)
+  - [License](#license)
+  - [How to contribute](#how-to-contribute)
+  - [Credits](#credits)
+      - [Maintainers](#maintainers)
+      - [Third-party Assets](#third-party-assets)
+<!--toc:end-->
+
 
 ## Installation
 
@@ -40,7 +61,7 @@ source install/setup.bash # or zsh if using the zsh shell!
 
 After having build the workspace, you should now be able to use the driver to control your robot.
 
-#### Dependencies
+### Dependencies
 
 - [unitree_legged_sdk](https://github.com/unitreerobotics/unitree_legged_sdk): This is the SDK provided by the Unitree robotics. It is being used to send/receive all the High level commands to/from the robot.
 
@@ -103,7 +124,7 @@ anyone using the robot.
 The following statuses are available:
 
 - **Green Light**: Ready status
-- **White Light**: Iddle status
+- **White Light**: Idle status
 - **Blue Light**: Moving status
 - **Yellow Light**: Low battery _(< 30 %)_
 - **Red Light**: Any internal error (Not yet implemented)

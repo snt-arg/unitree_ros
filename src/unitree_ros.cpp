@@ -15,6 +15,7 @@ UnitreeRosNode::UnitreeRosNode() : Node("unitree_ros_node") {
     unitree_driver_ = std::make_unique<UnitreeDriver>(robot_ip_, robot_target_port_);
     tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(this);
     unitree_driver_->enable_obstacle_avoidance(use_obstacle_avoidance_);
+    check_robot_battery_callback_();
 
     RCLCPP_INFO(get_logger(), "Unitree ROS node initialized!");
 }

@@ -14,20 +14,20 @@ For more information about the different topics this ROS package subscribes or p
 
 <!--toc:start-->
 
-- [Installation](#installation)
+- [🚀 Installation](#🚀-installation)
   - [Dependencies](#dependencies)
-- [Usage](#usage)
-- [Features](#features)
+- [🏗️ Usage](#🏗️-usage)
+- [📌 Features](#📌-features)
   - [ROS Topics](#ros-topics)
-    - [Subscribed Topics](#subscribed-topics)
-    - [Published Topics](#published-topis)
-  - [Robot LED statuses](#robot-led-statuses)
-  - [Low Battery Protection](#low-battery-protection)
-  - [Obstacle Avoidance](#obstacle-avoidance)
-- [License](#license)
+    - [🔽 Subscribed Topics](#🔽-subscribed-topics)
+    - [🔼 Published Topics](#🔼-published-topics)
+  - [⚙️ ROS Parameters](#️-ros-parameters)
+  - [💡 Robot LED statuses](#💡-robot-led-statuses)
+  - [🔋 Low Battery Protection](#🔋-low-battery-protection)
+  - [🚧 Obstacle Avoidance](#🚧-obstacle-avoidance)
+- [🔑 License](#🔑-license)
 - [How to contribute](#how-to-contribute)
-- [Credits](#credits)
-  - [Maintainers](#maintainers)
+- [🏆 Credits](#🏆-credits) - [Maintainers](#maintainers)
   - [Third-party Assets](#third-party-assets)
   <!--toc:end-->
 
@@ -44,6 +44,7 @@ To install and use this ROS2 package, you will need to clone it first, into a de
 mkdir -p ~/unitree_ws/src
 cd ~/unitree_ws/src
 git clone ---recurse-submodules https://github.com/snt-arg/unitree_ros.git
+cp unitree_ros/utils/faceLightSDK_Nano/lib/libfaceLight_SDK_amd64.so /lib # if you have an arm cpu, change amd to arm
 ```
 
 Once you have cloned this repository, you will need to build it using Colcon.

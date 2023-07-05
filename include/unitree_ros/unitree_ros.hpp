@@ -13,7 +13,7 @@
 #include <std_msgs/msg/u_int8_multi_array.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
 
-#include "unitree_ros/unitree_data.hpp"
+#include "unitree_ros/common_defines.hpp"
 #include "unitree_ros/unitree_driver.hpp"
 
 class UnitreeRosNode : public rclcpp::Node {

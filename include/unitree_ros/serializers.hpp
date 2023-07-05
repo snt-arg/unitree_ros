@@ -6,8 +6,8 @@
 #include <nav_msgs/msg/detail/odometry__struct.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+#include <unitree_ros/common_defines.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
-#include <unitree_ros/unitree_data.hpp>
 
 #include "unitree_legged_sdk/comm.h"
 

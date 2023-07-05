@@ -9,7 +9,7 @@
 
 #include "FaceLightClient.h"
 #include "unitree_legged_sdk/comm.h"
-#include "unitree_ros/unitree_data.hpp"
+#include "unitree_ros/common_defines.hpp"
 
 UnitreeDriver::UnitreeDriver(std::string ip_addr, int target_port)
     : ip_addr_(ip_addr),

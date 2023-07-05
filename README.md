@@ -1,14 +1,21 @@
 # Unitree Go1 ROS2 Driver
 
+
+<p align="center">
+    <img src="./docs/unitree_go1.png" width="30%"/>
+
+
 ## 🤖 Description
 
 This is a ROS2 package which can be used to control the legged robot **Unitree Go1**
 using ROS topics.
 With this driver, you can send commands to the robot via ROS topics such as `/cmd_vel` and receive robot sensors states such as `odometry` and `IMU` information.
 In addition, this driver features some other cool functions such as standing up the robot.
-More of the features can be found [here](#features).
+More of the features can be found [here](#📌-features).
+</p>
 
 For more information about the different topics this ROS package subscribes or publishes, please refer to [ROS Topics](#ros-topics) section.
+
 
 ## 📖 Table of Contents
 
@@ -145,9 +152,17 @@ anyone using the robot.
 The following statuses are available:
 
 - **Green Light**: Ready status
+
+    <img src="./docs/ready_status.gif" width="150" height="150"/>
 - **White Light**: Idle status
+
+    <img src="./docs/idle_status.gif" width="150" height="150"/>
 - **Blue Light**: Moving status
+
+    <img src="./docs/moving_status.gif" width="150" height="150"/>
 - **Yellow Light**: Low battery _(< 30 %)_
+
+    <img src="./docs/low_battery_status.gif" width="150" height="150"/>
 - **Red Light**: Any internal error (Not yet implemented)
 
 ### 🔋 Low Battery Protection

@@ -4,10 +4,14 @@
 #include <FaceLightClient.h>
 #include <unitree_legged_sdk/unitree_legged_sdk.h>
 
-#include <unitree_ros/unitree_data.hpp>
+#include <unitree_ros/common_defines.hpp>
 
 #include "unitree_legged_sdk/comm.h"
 
+/*
+ * @brief Class Unitree driver which is use for the main interaction with
+ * the Unitree Go1 robot.
+ */
 class UnitreeDriver {
     // Unitree SDK related
    private:
@@ -43,6 +47,10 @@ class UnitreeDriver {
      * @param target_port_: Port to be used to communicate with robot (default: 8082)
      */
     UnitreeDriver(std::string ip_addr = "192.168.123.161", int target_port = 8082);
+    /*
+     * @brief Deconstructor for the class UnitreeDriver. When called, it makes
+     * the robot stand down and deactivate the motors.
+     */
     ~UnitreeDriver();
 
     /**
@@ -68,14 +76,15 @@ class UnitreeDriver {
     /**
      * @brief Move robot with with velocity commands
      *
-     * @param x: forward/backards direction
-     * @param y: left/right direction
-     * @param yaw: rotation along the z axis
+     * @param x: forward(+)/backards(-) direction
+     * @param y: left(+)/right(-) direction
+     * @param yaw: rotation along the z axis (+ccw)
      */
     void walk_w_vel(float x, float y, float yaw);
 
     /**
-     * @brief Move robot with position commands
+     * @brief Move robot with position commands relative where the robot was booted
+     * (Never tested)
      *
      * @param position: {x, y z}
      * @param orientation: {z, y, z, w}
@@ -158,9 +167,26 @@ class UnitreeDriver {
      */
     void stop();
 
+    /**
+     * @brief Sets the robot face LEDs color
+     *
+     * @param r: percentage of the red color (0-254)
+     * @param g: percentage of the green color (0-254)
+     * @param b: percentage of the blue color (0-254)
+     */
     void set_head_led(uint8_t r, uint8_t g, uint8_t b);
+
+    /**
+     * @brief Sets the robot face LEDs color
+     *
+     * @param led: struct containing the 3 primary colors
+     */
     void set_head_led(UNITREE_LEGGED_SDK::LED led);
-    void show_robot_status();
+
+    /**
+     * @brief Sends the colors to the face LEDs based on the robot status.
+     */
+    void update_robot_status();
 
    private:
     /**
@@ -196,7 +222,19 @@ class UnitreeDriver {
      */
     velocity_t get_velocity_();
 
+    /**
+     * Makes the robot's face LEDs blink.
+     *
+     * @param r: percentage of the red color (0-254)
+     * @param g: percentage of the green color (0-254)
+     * @param b: percentage of the blue color (0-254)
+     */
     void blink_face_led(uint8_t r, uint8_t g, uint8_t b);
+    /**
+     * Makes the robot's face LEDs blink.
+     *
+     * @param led: struct containing the 3 primary colors
+     */
     void blink_face_led(UNITREE_LEGGED_SDK::LED led);
 };
 

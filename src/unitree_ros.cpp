@@ -15,6 +15,7 @@ UnitreeRosNode::UnitreeRosNode() : Node("unitree_ros_node") {
     unitree_driver_ = std::make_unique<UnitreeDriver>(robot_ip_, robot_target_port_);
     tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(this);
     unitree_driver_->enable_obstacle_avoidance(use_obstacle_avoidance_);
+    check_robot_battery_callback_();
 
     RCLCPP_INFO(get_logger(), "Unitree ROS node initialized!");
 }
@@ -79,9 +80,6 @@ void UnitreeRosNode::init_timers_() {
     robot_state_timer_ = this->create_wall_timer(
         100ms, std::bind(&UnitreeRosNode::robot_state_callback_, this));
 
-    robot_status_led_timer_ = this->create_wall_timer(
-        2s, std::bind(&UnitreeRosNode::robot_status_led_callback_, this));
-
     cmd_vel_reset_timer_ = this->create_wall_timer(
         1ms, std::bind(&UnitreeRosNode::cmd_vel_reset_callback_, this));
 
@@ -134,10 +132,6 @@ void UnitreeRosNode::stand_up_callback_(const std_msgs::msg::Empty::UniquePtr ms
 void UnitreeRosNode::stand_down_callback_(const std_msgs::msg::Empty::UniquePtr msg) {
     msg.get();  // Just to ignore linter warning
     unitree_driver_->stand_down();
-}
-
-void UnitreeRosNode::robot_status_led_callback_() {
-    /* unitree_driver_->show_robot_status(); */
 }
 
 // -----------------------------------------------------------------------------

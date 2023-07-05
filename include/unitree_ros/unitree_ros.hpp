@@ -13,7 +13,7 @@
 #include <std_msgs/msg/u_int8_multi_array.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
 
-#include "unitree_ros/unitree_data.hpp"
+#include "unitree_ros/common_defines.hpp"
 #include "unitree_ros/unitree_driver.hpp"
 
 class UnitreeRosNode : public rclcpp::Node {
@@ -47,7 +47,8 @@ class UnitreeRosNode : public rclcpp::Node {
 
     // Timers
     rclcpp::TimerBase::SharedPtr robot_state_timer_;
-    rclcpp::TimerBase::SharedPtr robot_status_led_timer_;
+    // This timer is used to reset the velocity command to 0, which is a safety
+    // measure.
     rclcpp::TimerBase::SharedPtr cmd_vel_reset_timer_;
     rclcpp::TimerBase::SharedPtr check_robot_battery_timer_;
     rclcpp::Time prev_cmd_vel_sent_;
@@ -61,10 +62,20 @@ class UnitreeRosNode : public rclcpp::Node {
     bool use_obstacle_avoidance_ = false;
 
    public:
+    /**
+     * @brief Constructor of the class UnitreeRosNode
+     */
     UnitreeRosNode();
+    /**
+     * @brief deconstructor of the class UnitreeRosNode
+     */
     ~UnitreeRosNode();
 
    private:
+    /**
+     * @brief Reads all the availabe ROS parameters and writes their values to
+     * the appropriate attribues
+     */
     void read_parameters_();
 
     void init_subscriptions_();
@@ -73,7 +84,6 @@ class UnitreeRosNode : public rclcpp::Node {
 
     void cmd_vel_callback_(const geometry_msgs::msg::Twist::UniquePtr msg);
     void robot_state_callback_();
-    void robot_status_led_callback_();
     void check_robot_battery_callback_();
     void cmd_vel_reset_callback_();
     void stand_up_callback_(const std_msgs::msg::Empty::UniquePtr msg);
@@ -83,7 +93,6 @@ class UnitreeRosNode : public rclcpp::Node {
     void publish_imu_(rclcpp::Time time);
     void publish_bms_();
     void publish_odom_tf_(rclcpp::Time time, odom_t odom);
-    void publish_remote_();
 
     void apply_namespace_to_topic_names_();
 };

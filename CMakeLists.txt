@@ -53,14 +53,7 @@ include_directories(include
 # --------------------------------
               
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/MotorState.msg"
   "msg/BmsState.msg"
-  "msg/BmsCmd.msg"
-  "msg/Cartesian.msg"
-  "msg/IMU.msg"
-  "msg/LED.msg"
-  "msg/HighCmd.msg"
-  "msg/HighState.msg"
   DEPENDENCIES builtin_interfaces std_msgs geometry_msgs sensor_msgs nav_msgs
 )
 

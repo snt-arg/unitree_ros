@@ -9,7 +9,7 @@
 
 #include "FaceLightClient.h"
 #include "unitree_legged_sdk/comm.h"
-#include "unitree_ros/unitree_data.hpp"
+#include "unitree_ros/common_defines.hpp"
 
 UnitreeDriver::UnitreeDriver(std::string ip_addr, int target_port)
     : ip_addr_(ip_addr),
@@ -19,7 +19,7 @@ UnitreeDriver::UnitreeDriver(std::string ip_addr, int target_port)
                       ip_addr.c_str(),
                       target_port),
       light_client_(),
-      face_led_thread_(&UnitreeDriver::show_robot_status, this),
+      face_led_thread_(&UnitreeDriver::update_robot_status, this),
       face_led_thread_stop_flag_(false) {
     // Check if the connection is established
     if (!is_connection_established_()) {
@@ -210,7 +210,14 @@ void UnitreeDriver::blink_face_led(uint8_t r, uint8_t g, uint8_t b) {
     sleep(1);
 }
 
-void UnitreeDriver::show_robot_status() {
+void UnitreeDriver::blink_face_led(UNITREE_LEGGED_SDK::LED led) {
+    set_head_led(led);
+    sleep(1);
+    set_head_led(0, 0, 0);
+    sleep(1);
+}
+
+void UnitreeDriver::update_robot_status() {
     while (!face_led_thread_stop_flag_) {
         if (get_battery_percentage() < 30) {
             robot_status = robot_status_e::BATTERY_LOW;

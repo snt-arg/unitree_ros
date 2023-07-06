@@ -5,40 +5,40 @@
     <img src="./docs/unitree_go1.png" width="30%"/>
 
 
-## 🤖 Description
+## Description
 
 This is a ROS2 package which can be used to control the legged robot **Unitree Go1**
 using ROS topics.
-With this driver, you can send commands to the robot via ROS topics such as `/cmd_vel` and receive robot sensors states such as `odometry` and `IMU` information.
-In addition, this driver features some other cool functions such as standing up the robot.
-More of the features can be found [here](#📌-features).
+With this driver, you can send commands to the robot via ROS topics such as `/cmd_vel` and receive robot sensor states such as `odometry` and `IMU` information.
+In addition, this driver features some other cool functions, such as standing up the robot.
+More of the features can be found [here](#features).
 </p>
 
-For more information about the different topics this ROS package subscribes or publishes, please refer to [ROS Topics](#ros-topics) section.
+For more information about the different topics this ROS package subscribes to or publishes, please refer to the [ROS Topics](#ros-topics) section.
 
 
-## 📖 Table of Contents
+## Table of Contents
 
 <!--toc:start-->
 
-- [🚀 Installation](#🚀-installation)
+- [Installation](#installation)
   - [Dependencies](#dependencies)
-- [🏗️ Usage](#🏗️-usage)
-- [📌 Features](#📌-features)
+- [Usage](#usage)
+- [Features](#features)
   - [ROS Topics](#ros-topics)
-    - [🔽 Subscribed Topics](#🔽-subscribed-topics)
-    - [🔼 Published Topics](#🔼-published-topics)
-  - [⚙️ ROS Parameters](#️-ros-parameters)
-  - [💡 Robot LED statuses](#💡-robot-led-statuses)
-  - [🔋 Low Battery Protection](#🔋-low-battery-protection)
-  - [🚧 Obstacle Avoidance](#🚧-obstacle-avoidance)
-- [🔑 License](#🔑-license)
-- [How to contribute](#how-to-contribute)
-- [🏆 Credits](#🏆-credits) - [Maintainers](#maintainers)
+    - [Subscribed Topics](#subscribed-topics)
+    - [Published Topics](#published-topics)
+  - [ROS Parameters](#ros-parameters)
+  - [Robot LED statuses](#robot-led-statuses)
+  - [Low Battery Protection](#low-battery-protection)
+  - [Obstacle Avoidance](#obstacle-avoidance)
+- [License](#license)
+- [How to Contribute](#how-to-contribute)
+- [Credits](#credits) - [Maintainers](#maintainers)
   - [Third-party Assets](#third-party-assets)
   <!--toc:end-->
 
-## 🚀 Installation
+## Installation
 
 > _Before using this ROS2 package, you will need to make sure you have `ROS2 Foxy` installed on your machine.
 > In case you want to use a ROS distro above the Foxy distribution, there is no
@@ -74,7 +74,7 @@ After having build the workspace, you should now be able to use the driver to co
 - **`faceLightSDK_nano`**: This is the SDK that can be found on the internal computers of the Unitree Go1. It has been ported to this ROS package with the goal of being able to control the face LEDs, which are used to
   give some robot statuses.
 
-## 🏗️ Usage
+## Usage
 
 Before using the driver, you will need to make a decision whether you want to control the robot
 using a Wi-Fi connection or a wired connection. In case you go for a wired connection, you won't need
@@ -108,11 +108,11 @@ source ~/unitree_ws/install/setup.bash # or zsh if using the zsh shell!
 ros2 run unitree_ros unitree_driver
 ```
 
-## 📌 Features
+## Features
 
 ### ROS Topics
 
-#### 🔽 Subscribed Topics
+#### Subscribed Topics
 
 | Topic name    | Message Type                                                                                      | Description                                                                                             |
 | ------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
@@ -120,7 +120,7 @@ ros2 run unitree_ros unitree_driver
 | `/stand_up`   | [std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)         | Triggers the robot to stand up                                                                          |
 | `/stand_down` | [std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)         | Triggers the robot to stand down                                                                        |
 
-#### 🔼 Published Topics
+#### Published Topics
 
 | Topic name | Message Type                                                                                   | Description                                                                  |
 | ---------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -128,7 +128,7 @@ ros2 run unitree_ros unitree_driver
 | `/imu`     | [sensor_msgs/msg/IMU.msg](http://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/Imu.html)     | The IMU state received from the robot is being published to this topic.      |
 | `/bms`     | [unitree_ros/msg/bms.msg](https://github.com/snt-arg/unitree_ros/blob/main/msg/BmsState.msg)   | The battery state received from the robot is being published to this topic.  |
 
-## ⚙️ ROS Parameters
+## ROS Parameters
 
 | Parameter Name                | Default value   | Description                                                                                              |
 | ----------------------------- | --------------- | -------------------------------------------------------------------------------------------------------- |
@@ -145,7 +145,7 @@ ros2 run unitree_ros unitree_driver
 | `use_obstacle_avoidance`      | false           | Enables (true) or disables (false) the robot obstacle avoidance.                                         |
 | `low_batt_shutdown_threshold` | 20              | Battery threshold for when to stop the robot from moving, in case the battery is below                   |
 
-### 💡 Robot LED statuses
+### Robot LED statuses
 
 The robot has a few predetermined LED statuses, which are useful to give some information to
 anyone using the robot.
@@ -165,27 +165,27 @@ The following statuses are available:
     <img src="./docs/low_battery_status.gif" width="150" height="150"/>
 - **Red Light**: Any internal error (Not yet implemented)
 
-### 🔋 Low Battery Protection
+### Low Battery Protection
 
 By specifying a low battery threshold using the parameters file (`low_batt_shutdown_threshold`), the driver will stop the robot
 from moving and will stand it down. _By default, the low battery threshold value is set to 20%._
 
-### 🚧 Obstacle Avoidance
+### Obstacle Avoidance
 
 The robot has an obstacle avoidance mode. However, this mode is not enabled by default. Therefore,
 this driver allows you to enable it using the parameters file (`use_obstacle_avoidance`). _By default, this is
 set to false_
 
-## 🔑 License
+## License
 
 This project is licensed under the BSD-3 License - see the LICENSE file for details.
 
-## How to contribute
+## How to Contribute
 
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests,
 please create a new issue or pull request.
 
-## 🏆 Credits
+## Credits
 
 #### Maintainers
 

@@ -26,27 +26,43 @@ find_package(geometry_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 
-# ------------------------------
-# - External Libraries Section -
-# ------------------------------
 
-# unitree_legged_sdk Library
+# --------------------------------
+# -       Setters Section        -
+# --------------------------------
+
 if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "x86_64.*")
-  set(ARCH amd64)
+  SET(ARCH amd64)
 else()
-  set(ARCH arm64)
+  SET(ARCH arm64)
 endif()
 
+SET(EXTRA_LIBS 
+    -pthread 
+    libunitree_legged_sdk.a 
+    libfaceLight_SDK_${ARCH}.so
+)
+
+SET(SOURCES 
+    src/unitree_ros.cpp 
+    src/unitree_driver.cpp 
+    src/serializers.cpp
+)
+
+SET(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs tf2 tf2_ros)
+
+# --------------------------------
+# -      Libraries Section       -
+# --------------------------------
+
 link_directories(${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/lib/cpp/${ARCH})
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/utils/faceLightSDK_Nano/lib)
-set(EXTRA_LIBS -pthread unitree_legged_sdk faceLight_SDK_amd64)
-set(CMAKE_CXX_FLAGS "-O3 -march=native -Wall -fPIC")
+link_directories(${CMAKE_SOURCE_DIR}/utils/faceLightSDK_Nano/lib)
+
 
 include_directories(include 
                    ${CMAKE_SOURCE_DIR}/utils/unitree_legged_sdk/include)
 include_directories(include 
                    ${CMAKE_SOURCE_DIR}/utils/faceLightSDK_Nano/include)
-
 
 # --------------------------------
 # - Message Generatation Section -
@@ -57,13 +73,13 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   DEPENDENCIES builtin_interfaces std_msgs geometry_msgs sensor_msgs nav_msgs
 )
 
+
 # -----------------------
-# - Build Section -
+# -    Build Section    -
 # -----------------------
 
-set(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs tf2 tf2_ros)
 
-add_executable(unitree_driver src/unitree_ros_node.cpp src/unitree_ros.cpp src/unitree_driver.cpp src/serializers.cpp)
+add_executable(unitree_driver src/unitree_ros_node.cpp ${SOURCES})
 target_link_libraries(unitree_driver ${EXTRA_LIBS})
 ament_target_dependencies(unitree_driver ${DEPENDENCIES})
 rosidl_target_interfaces(unitree_driver ${PROJECT_NAME} "rosidl_typesupport_cpp")
@@ -89,5 +105,8 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
   INCLUDES DESTINATION include
 )
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/utils/faceLightSDK_Nano/lib/libfaceLight_SDK_${ARCH}.so
+        DESTINATION lib)
 
 ament_package()

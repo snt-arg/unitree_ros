@@ -51,7 +51,6 @@ To install and use this ROS2 package, you will need to clone it first, into a de
 mkdir -p ~/unitree_ws/src
 cd ~/unitree_ws/src
 git clone ---recurse-submodules https://github.com/snt-arg/unitree_ros.git
-cp unitree_ros/utils/faceLightSDK_Nano/lib/libfaceLight_SDK_amd64.so /lib # if you have an arm cpu, change amd to arm
 ```
 
 Once you have cloned this repository, you will need to build it using Colcon.

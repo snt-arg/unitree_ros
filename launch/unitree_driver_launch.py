@@ -1,7 +1,6 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
-import yaml
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -23,9 +22,6 @@ def generate_launch_description():
 
 def launch_unitree_driver(context, *args, **kwargs):
     params_file = LaunchConfiguration("params_file")
-
-    with open(params_file.perform(context)) as f:
-        params = yaml.safe_load(f)["unitree_ros_node"]["ros__parameters"]
 
     unitree_driver_node = Node(
         package="unitree_ros",
@@ -51,25 +47,7 @@ def launch_unitree_driver(context, *args, **kwargs):
         output="screen",
     )
 
-    t_basefootprint_baselink = Node(
-        package="tf2_ros",
-        executable="static_transform_publisher",
-        arguments=[
-            "0",
-            "0",
-            "0.0",
-            "0",
-            "0",
-            "0",
-            "1",
-            "base_footprint",
-            "base_link",
-        ],
-        output="screen",
-    )
-
     return [
         unitree_driver_node,
         t_baselink_ossensor,
-        t_basefootprint_baselink,
     ]

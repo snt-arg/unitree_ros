@@ -81,7 +81,7 @@ void UnitreeRosNode::init_timers_() {
     RCLCPP_INFO(get_logger(), "Initializing ROS timers...");
 
     robot_state_timer_ = this->create_wall_timer(
-        100ms, std::bind(&UnitreeRosNode::robot_state_callback_, this));
+        50ms, std::bind(&UnitreeRosNode::robot_state_callback_, this));
 
     cmd_vel_reset_timer_ = this->create_wall_timer(
         1ms, std::bind(&UnitreeRosNode::cmd_vel_reset_callback_, this));

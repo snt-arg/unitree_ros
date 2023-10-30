@@ -13,7 +13,7 @@ unitree_ros_node:
     # Frame Ids
     imu_frame_id: 'imu'
     odom_frame_id: 'odom'
-    odom_child_frame_id: 'base_footprint'
+    odom_child_frame_id: 'base_link'
     # Flags
     use_obstacle_avoidance: false
     low_batt_shutdown_threshold: 20 # battery range is [0-100]%

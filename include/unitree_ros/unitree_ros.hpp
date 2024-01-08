@@ -12,6 +12,7 @@
 #include <std_msgs/msg/empty.hpp>
 #include <std_msgs/msg/u_int8_multi_array.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
+#include <unitree_ros/msg/sensor_ranges.hpp>
 
 #include "unitree_ros/common_defines.hpp"
 #include "unitree_ros/unitree_driver.hpp"
@@ -29,6 +30,7 @@ class UnitreeRosNode : public rclcpp::Node {
     std::string odom_topic_name_ = ns_ + "/odom";
     std::string imu_topic_name_ = ns_ + "/imu";
     std::string bms_topic_name_ = ns_ + "/bms";
+    std::string sensor_ranges_topic_name = ns_ + "/sensor_ranges";
 
     // Frame Ids
     std::string odom_frame_id_ = ns_ + "odom";
@@ -39,6 +41,7 @@ class UnitreeRosNode : public rclcpp::Node {
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
     rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub_;
     rclcpp::Publisher<unitree_ros::msg::BmsState>::SharedPtr bms_pub_;
+    rclcpp::Publisher<unitree_ros::msg::SensorRanges>::SharedPtr sensor_ranges_pub_;
 
     // Subscriptions
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
@@ -92,6 +95,7 @@ class UnitreeRosNode : public rclcpp::Node {
     void publish_odom_(rclcpp::Time time);
     void publish_imu_(rclcpp::Time time);
     void publish_bms_();
+    void publish_sensor_ranges_();
     void publish_odom_tf_(rclcpp::Time time, odom_t odom);
 
     void apply_namespace_to_topic_names_();

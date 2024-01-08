@@ -34,9 +34,13 @@ class UnitreeDriver {
     FaceLightClient light_client_;
 
     // Robot status
+    robot_status_e robot_status = robot_status_e::IDDLE;
+
+    // Threads
     std::thread face_led_thread_;
     std::atomic<bool> face_led_thread_stop_flag_;
-    robot_status_e robot_status = robot_status_e::IDDLE;
+    std::thread recv_state_thread_;
+    std::atomic<bool> recv_state_thread_stop_flag_;
 
    public:
     /**
@@ -89,7 +93,7 @@ class UnitreeDriver {
      * @param position: {x, y z}
      * @param orientation: {z, y, z, w}
      */
-    void walk_w_pos(position_t position, orientation_t orientation);
+    void walk_w_pos(position_t position, quarternion_t orientation);
 
     /**
      * @brief Retrieves odometry from the robot
@@ -215,7 +219,7 @@ class UnitreeDriver {
     /**
      * @brief Helper method to retrieve robot's orientation from High State
      */
-    orientation_t get_orientation_();
+    quarternion_t get_quaternion_();
 
     /**
      * @brief Helper method to retrieve robot's velocity from High State

@@ -73,6 +73,8 @@ void UnitreeRosNode::init_publishers_() {
     odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>(odom_topic_name_, qos);
     imu_pub_ = this->create_publisher<sensor_msgs::msg::Imu>(imu_topic_name_, qos);
     bms_pub_ = this->create_publisher<unitree_ros::msg::BmsState>(bms_topic_name_, qos);
+    sensor_ranges_pub_ = this->create_publisher<unitree_ros::msg::SensorRanges>(
+        sensor_ranges_topic_name, qos);
 
     RCLCPP_INFO(get_logger(), "Finished initializing ROS publishers!");
 }
@@ -81,7 +83,7 @@ void UnitreeRosNode::init_timers_() {
     RCLCPP_INFO(get_logger(), "Initializing ROS timers...");
 
     robot_state_timer_ = this->create_wall_timer(
-        50ms, std::bind(&UnitreeRosNode::robot_state_callback_, this));
+        20ms, std::bind(&UnitreeRosNode::robot_state_callback_, this));
 
     cmd_vel_reset_timer_ = this->create_wall_timer(
         1ms, std::bind(&UnitreeRosNode::cmd_vel_reset_callback_, this));
@@ -118,6 +120,7 @@ void UnitreeRosNode::robot_state_callback_() {
     auto now = this->get_clock()->now();
     publish_imu_(now);
     publish_bms_();
+    publish_sensor_ranges_();
     publish_odom_(now);
 }
 
@@ -144,13 +147,6 @@ void UnitreeRosNode::stand_down_callback_(const std_msgs::msg::Empty::UniquePtr 
 void UnitreeRosNode::publish_odom_(rclcpp::Time time) {
     odom_t odom = unitree_driver_->get_odom();
 
-    tf2::Quaternion q;
-    q.setRPY(odom.pose.orientation.x, odom.pose.orientation.y, odom.pose.orientation.z);
-    odom.pose.orientation.x = q.getX();
-    odom.pose.orientation.y = q.getY();
-    odom.pose.orientation.z = q.getZ();
-    odom.pose.orientation.w = q.getW();
-
     nav_msgs::msg::Odometry odom_msg;
     odom_msg.header.stamp = time;
     odom_msg.header.frame_id = odom_frame_id_;
@@ -172,6 +168,12 @@ void UnitreeRosNode::publish_bms_() {
     unitree_ros::msg::BmsState bms_msg;
     serialize(bms_msg, unitree_driver_->get_bms());
     bms_pub_->publish(bms_msg);
+}
+
+void UnitreeRosNode::publish_sensor_ranges_() {
+    unitree_ros::msg::SensorRanges ranges_msg;
+    serialize(ranges_msg, unitree_driver_->get_radar_ranges());
+    sensor_ranges_pub_->publish(ranges_msg);
 }
 
 void UnitreeRosNode::publish_odom_tf_(rclcpp::Time time, odom_t odom) {

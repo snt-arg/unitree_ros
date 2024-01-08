@@ -1,10 +1,9 @@
 #include <unistd.h>
 
 #include <cstdint>
-#include <cstdio>
-#include <cstring>
 #include <iostream>
 #include <ostream>
+#include <thread>
 #include <unitree_ros/unitree_driver.hpp>
 
 #include "FaceLightClient.h"
@@ -20,7 +19,12 @@ UnitreeDriver::UnitreeDriver(std::string ip_addr, int target_port)
                       target_port),
       light_client_(),
       face_led_thread_(&UnitreeDriver::update_robot_status, this),
-      face_led_thread_stop_flag_(false) {
+      face_led_thread_stop_flag_(false),
+      recv_state_thread_(&UnitreeDriver::recv_high_state_, this),
+      recv_state_thread_stop_flag_(false) {
+    // Giving some time to establish a connection
+    sleep(2);
+
     // Check if the connection is established
     if (!is_connection_established_()) {
         throw std::runtime_error(
@@ -45,16 +49,14 @@ UnitreeDriver::~UnitreeDriver() {
 // -----------------------------------------------------------------------------
 
 odom_t UnitreeDriver::get_odom() {
-    recv_high_state_();
     position_t position = get_position_();
-    orientation_t orientation = get_orientation_();
+    quarternion_t quarternion = get_quaternion_();
     velocity_t velocity = get_velocity_();
-    pose_t pose = {position, orientation};
+    pose_t pose = {position, quarternion};
     return {pose, velocity};
 }
 
 sensor_ranges_t UnitreeDriver::get_radar_ranges() {
-    recv_high_state_();
     sensor_ranges_t ranges;
     ranges.front = high_state_.rangeObstacle[0];
     ranges.left = high_state_.rangeObstacle[1];
@@ -62,20 +64,11 @@ sensor_ranges_t UnitreeDriver::get_radar_ranges() {
     return ranges;
 }
 
-UNITREE_LEGGED_SDK::IMU UnitreeDriver::get_imu() {
-    recv_high_state_();
-    return high_state_.imu;
-}
+UNITREE_LEGGED_SDK::IMU UnitreeDriver::get_imu() { return high_state_.imu; }
 
-UNITREE_LEGGED_SDK::BmsState UnitreeDriver::get_bms() {
-    recv_high_state_();
-    return high_state_.bms;
-}
+UNITREE_LEGGED_SDK::BmsState UnitreeDriver::get_bms() { return high_state_.bms; }
 
-uint8_t UnitreeDriver::get_battery_percentage() {
-    recv_high_state_();
-    return high_state_.bms.SOC;
-}
+uint8_t UnitreeDriver::get_battery_percentage() { return high_state_.bms.SOC; }
 
 // -----------------------------------------------------------------------------
 // -                                  Setters                                  -
@@ -126,7 +119,7 @@ void UnitreeDriver::walk_w_vel(float x, float y, float yaw) {
     send_high_cmd_();
 }
 
-void UnitreeDriver::walk_w_pos(position_t position, orientation_t orientation) {
+void UnitreeDriver::walk_w_pos(position_t position, quarternion_t orientation) {
     robot_status = robot_status_e::MOVING;
     if (use_obstacle_avoidance_)
         set_gaitype(gaitype_enum::TROT_OBSTACLE);
@@ -142,7 +135,6 @@ void UnitreeDriver::walk_w_pos(position_t position, orientation_t orientation) {
 }
 
 void UnitreeDriver::damping_mode() {
-    recv_high_state_();
     if (high_state_.mode == mode_enum::STAND_DOWN) {
         set_mode(mode_enum::DAMPING_MODE);
         send_high_cmd_();
@@ -181,8 +173,11 @@ position_t UnitreeDriver::get_position_() {
     return {high_state_.position[0], high_state_.position[1], high_state_.position[2]};
 }
 
-orientation_t UnitreeDriver::get_orientation_() {
-    return {high_state_.imu.rpy[0], high_state_.imu.rpy[1], high_state_.imu.rpy[2], 0};
+quarternion_t UnitreeDriver::get_quaternion_() {
+    return {high_state_.imu.quaternion[1],
+            high_state_.imu.quaternion[2],
+            high_state_.imu.quaternion[3],
+            high_state_.imu.quaternion[0]};
 }
 
 velocity_t UnitreeDriver::get_velocity_() {
@@ -256,7 +251,10 @@ void UnitreeDriver::send_high_cmd_() {
 }
 
 void UnitreeDriver::recv_high_state_() {
-    udp_connection_.Send();
-    udp_connection_.Recv();
-    udp_connection_.GetRecv(high_state_);
+    for (;;) {
+        udp_connection_.Send();
+        udp_connection_.Recv();
+        udp_connection_.GetRecv(high_state_);
+        this_thread::sleep_for(20ms);
+    }
 }

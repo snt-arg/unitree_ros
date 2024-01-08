@@ -83,7 +83,7 @@ typedef struct {
     float y;
     float z;
     float w;
-} orientation_t;
+} quarternion_t;
 
 /**
  * @brief Pose data type
@@ -93,7 +93,7 @@ typedef struct {
  */
 typedef struct {
     position_t position;
-    orientation_t orientation;
+    quarternion_t orientation;
 } pose_t;
 
 /**

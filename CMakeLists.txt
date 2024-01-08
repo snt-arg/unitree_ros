@@ -70,6 +70,7 @@ include_directories(include
               
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/BmsState.msg"
+  "msg/SensorRanges.msg"
   DEPENDENCIES builtin_interfaces std_msgs geometry_msgs sensor_msgs nav_msgs
 )
 

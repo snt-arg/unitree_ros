@@ -255,6 +255,6 @@ void UnitreeDriver::recv_high_state_() {
         udp_connection_.Send();
         udp_connection_.Recv();
         udp_connection_.GetRecv(high_state_);
-        this_thread::sleep_for(20ms);
+        this_thread::sleep_for(2ms);
     }
 }

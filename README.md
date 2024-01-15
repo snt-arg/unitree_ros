@@ -32,6 +32,7 @@ For more information about the different topics this ROS package subscribes to o
   - [Robot LED statuses](#robot-led-statuses)
   - [Low Battery Protection](#low-battery-protection)
   - [Obstacle Avoidance](#obstacle-avoidance)
+  - [Comming Soon](#comming-soon)
 - [License](#license)
 - [How to Contribute](#how-to-contribute)
 - [Credits](#credits) - [Maintainers](#maintainers)
@@ -175,9 +176,13 @@ The robot has an obstacle avoidance mode. However, this mode is not enabled by d
 this driver allows you to enable it using the parameters file (`use_obstacle_avoidance`). _By default, this is
 set to false_
 
+### Comming Soon
+
+In the future, the joints of the robot will also be published.
+
 ## License
 
-This project is licensed under the BSD-3 License - see the LICENSE file for details.
+This project is licensed under the SnT academic license - see the [LICENSE](https://github.com/snt-arg/unitree_ros/blob/main/LICENSE) for more details.
 
 ## How to Contribute
 

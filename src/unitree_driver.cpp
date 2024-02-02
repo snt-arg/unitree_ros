@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <iostream>
 #include <ostream>
-#include <thread>
 #include <unitree_ros/unitree_driver.hpp>
 
 #include "FaceLightClient.h"

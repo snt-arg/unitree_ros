@@ -4,6 +4,9 @@
 #include <FaceLightClient.h>
 #include <unitree_legged_sdk/unitree_legged_sdk.h>
 
+#include <atomic>
+#include <memory>
+#include <thread>
 #include <unitree_ros/common_defines.hpp>
 
 #include "unitree_legged_sdk/comm.h"

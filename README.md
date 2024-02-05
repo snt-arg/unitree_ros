@@ -1,9 +1,15 @@
 # Unitree Go1 ROS2 Driver
 
-
 <p align="center">
     <img src="./docs/unitree_go1.png" width="30%"/>
 
+## ROS Distro Build Status
+
+| ROS Distro | Status                                                                                        |
+| ---------- | --------------------------------------------------------------------------------------------- |
+| **Iron**   | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/iron_build.yaml/badge.svg)   |
+| **Humble** | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/humble_build.yaml/badge.svg) |
+| **Foxy**   | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/foxy_build.yaml/badge.svg)   |
 
 ## Description
 
@@ -12,10 +18,10 @@ using ROS topics.
 With this driver, you can send commands to the robot via ROS topics such as `/cmd_vel` and receive robot sensor states such as `odometry` and `IMU` information.
 In addition, this driver features some other cool functions, such as standing up the robot.
 More of the features can be found [here](#features).
+
 </p>
 
 For more information about the different topics this ROS package subscribes to or publishes, please refer to the [ROS Topics](#ros-topics) section.
-
 
 ## Table of Contents
 
@@ -82,13 +88,13 @@ to do anything. In case you want to use the Wi-Fi connection, then you will need
 of the robot. To do so, go to the config folder and open the `params.yaml` file. There, change the following line:
 
 ```yaml
-robot_ip: '192.168.123.161' # Change to 192.168.12.1 for WIFI
+robot_ip: "192.168.123.161" # Change to 192.168.12.1 for WIFI
 ```
 
 to
 
 ```yaml
-robot_ip: '192.168.12.1' # Change to 192.168.123.161 for wired
+robot_ip: "192.168.12.1" # Change to 192.168.123.161 for wired
 ```
 
 In addition, you might want to change some of the other parameters available, such as the topic names.
@@ -154,15 +160,19 @@ The following statuses are available:
 - **Green Light**: Ready status
 
     <img src="./docs/ready_status.gif" width="150" height="150"/>
+
 - **White Light**: Idle status
 
     <img src="./docs/idle_status.gif" width="150" height="150"/>
+
 - **Blue Light**: Moving status
 
     <img src="./docs/moving_status.gif" width="150" height="150"/>
+
 - **Yellow Light**: Low battery _(< 30 %)_
 
     <img src="./docs/low_battery_status.gif" width="150" height="150"/>
+
 - **Red Light**: Any internal error (Not yet implemented)
 
 ### Low Battery Protection

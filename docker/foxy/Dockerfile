@@ -29,4 +29,6 @@ RUN . /opt/ros/foxy/setup.sh && \
     rosdep update && \
     rosdep install --from-paths src --ignore-src -r -y
 
+RUN rm -rf /root/.ssh
+
 WORKDIR /root/unitree_ws/src/unitree_ros

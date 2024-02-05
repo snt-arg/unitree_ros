@@ -47,12 +47,10 @@ For more information about the different topics this ROS package subscribes to o
 
 ## Installation
 
-> _Before using this ROS2 package, you will need to make sure you have `ROS2 Foxy` installed on your machine.
-> In case you want to use a ROS distro above the Foxy distribution, there is no
-> guarantee that this package can run there.
-> Nevertheless, plans to upgrade to a newer distro might be coming shortly._
-
 To install and use this ROS2 package, you will need to clone it first, into a desired workspace.
+
+> [!NOTE]
+> Make sure to clone it recursively, as depends on the `unitree_legged_sdk`.
 
 ```sh
 mkdir -p ~/unitree_ws/src
@@ -64,7 +62,7 @@ Once you have cloned this repository, you will need to build it using Colcon.
 
 ```sh
 cd ~/unitree_ws
-source /opt/ros/foxy/setup.bash # or zsh if using the zsh shell!
+source /opt/ros/[ros-distro]/setup.bash # or zsh if using the zsh shell!
 colcon build --symlink-install
 source install/setup.bash # or zsh if using the zsh shell!
 ```

@@ -1,3 +1,5 @@
+name: foxy
+
 on: [push]
 jobs:
   build_on_foxy_distro:

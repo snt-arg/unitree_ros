@@ -32,8 +32,11 @@ anyone to control the robot with velocity commands as well as receive back the r
 - [🔗 Related Packages](#related-packages)
 - [🔑 License](#license)
 - [👏 Contributions](#contributions)
-- [🎖️ Credits](#credits) - [Maintainers](#maintainers) - [Third-party Assets](#third-party-assets)
-  <!--toc:end-->
+- [🎖️ Credits](#credits)
+- [Maintainers](#maintainers)
+- [Third-party Assets](#third-party-assets)
+
+<!--toc:end-->
 
 ## ✅ ROS Distro Build Status <a id="ros-distro-build-status"></a>
 

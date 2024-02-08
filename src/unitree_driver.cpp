@@ -173,10 +173,10 @@ position_t UnitreeDriver::get_position_() {
 }
 
 quarternion_t UnitreeDriver::get_quaternion_() {
-    return {high_state_.imu.quaternion[1],
+    return {high_state_.imu.quaternion[0],
+            high_state_.imu.quaternion[1],
             high_state_.imu.quaternion[2],
-            high_state_.imu.quaternion[3],
-            high_state_.imu.quaternion[0]};
+            high_state_.imu.quaternion[3]};
 }
 
 velocity_t UnitreeDriver::get_velocity_() {

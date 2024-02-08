@@ -33,8 +33,8 @@ anyone to control the robot with velocity commands as well as receive back the r
 - [🔑 License](#license)
 - [👏 Contributions](#contributions)
 - [🎖️ Credits](#credits)
-- [Maintainers](#maintainers)
-- [Third-party Assets](#third-party-assets)
+    - [Maintainers](#maintainers)
+    - [Third-party Assets](#third-party-assets)
 
 <!--toc:end-->
 

@@ -1,10 +1,4 @@
-# Unitree Go1 ROS2 Driver
-
-<p align="center">
-    <img src="./docs/unitree_go1.png" width="30%"/>
-</p>
-
-## Description
+# 🐕 Go1 ROS2 Driver
 
 A ROS2 package which can be used to control the legged robot **Unitree Go1**
 using ROS topics.
@@ -15,30 +9,33 @@ anyone to control the robot with velocity commands as well as receive back the r
 > [!NOTE]
 > Only supports `unitree_legged_sdk` High level commands
 
-## Table of Contents
+<p align="center">
+    <img src="./docs/unitree_go1.png" width="30%"/>
+</p>
+
+## 📜 Table of Contents
 
 <!--toc:start-->
 
-- [ROS Distro Build Status](#ros-distro-build-status)
-- [Description](#description)
-- [Installation](#installation)
-  - [Installation From Source](#installation-from-source)
-- [Usage](#usage)
-- [ROS Topics](#ros-topics)
-  - [Subscribed Topics](#subscribed-topics)
-  - [Published Topics](#published-topics)
-- [ROS Parameters](#ros-parameters)
-- [Features](#features)
-  - [Robot LED statuses](#robot-led-statuses)
-  - [Low Battery Protection](#low-battery-protection)
-  - [Obstacle Avoidance](#obstacle-avoidance)
-- [Related Packages](#related-packages)
-- [License](#license)
-- [Contributions](#contributions)
-- [Credits](#credits) - [Maintainers](#maintainers) - [Third-party Assets](#third-party-assets)
+- [✅ ROS Distro Build Status](#ros-distro-build-status)
+- [⚙️ Installation](#installation)
+  - [📦 Installation From Source](#installation-from-source)
+- [🚀 Usage](#usage)
+- [🤖 ROS Related](#ros-related)
+  - [📥 Subscribed Topics](#subscribed-topics)
+  - [📤 Published Topics](#published-topics)
+  - [⚙️ ROS Parameters](#ros-parameters)
+- [🛠️ Features](#features)
+  - [💡 Robot LED statuses](#robot-led-statuses)
+  - [🪫 Low Battery Protection](#low-battery-protection)
+  - [🚧 Obstacle Avoidance](#obstacle-avoidance)
+- [🔗 Related Packages](#related-packages)
+- [🔑 License](#license)
+- [👏 Contributions](#contributions)
+- [🎖️ Credits](#credits) - [Maintainers](#maintainers) - [Third-party Assets](#third-party-assets)
   <!--toc:end-->
 
-## ROS Distro Build Status
+## ✅ ROS Distro Build Status <a id="ros-distro-build-status"></a>
 
 | ROS Distro | Status                                                                                        |
 | ---------- | --------------------------------------------------------------------------------------------- |
@@ -46,7 +43,7 @@ anyone to control the robot with velocity commands as well as receive back the r
 | **Humble** | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/humble_build.yaml/badge.svg) |
 | **Foxy**   | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/foxy_build.yaml/badge.svg)   |
 
-## Installation
+## ⚙️ Installation <a id="installation"></a>
 
 This package will be available soon in the ROS index. Thus, you can install it using `apt` (For now you can install it from source):
 
@@ -57,7 +54,7 @@ sudo apt install ros-[distro]-unitree-ros
 > [!IMPORTANT]
 > If you are using **foxy** as your ROS distribution, you need to build from source
 
-### Installation From Source
+### 📦 Installation From Source <a id="installation-from-source"></a>
 
 > [!NOTE]
 > Make sure to clone it recursively, as depends on the `unitree_legged_sdk`.
@@ -79,7 +76,7 @@ source install/setup.bash # or zsh if using the zsh shell!
 
 After having built the workspace, you should now be able to use the driver to control your robot.
 
-## Usage
+## 🚀 Usage <a id="usage"></a>
 
 Before using the driver, you will need to make a decision whether you want to control the robot
 using a Wi-Fi connection or a wired connection. In case you go for a wired connection, you won't need
@@ -103,9 +100,9 @@ ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_para
 > [!INFO]
 > In case, you want to change some of the other parameters available, such as the topic names, then you need to use the `config/params.yaml` file for that.
 
-### ROS Topics
+## 🤖 ROS Related <a id="ros-related"></a>
 
-#### Subscribed Topics
+### 📥 Subscribed Topics <a id="subscribed-topics"></a>
 
 | Topic name    | Message Type                                                                                      | Description                                                                                             |
 | ------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
@@ -113,7 +110,7 @@ ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_para
 | `/stand_up`   | [std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)         | Triggers the robot to stand up                                                                          |
 | `/stand_down` | [std_msgs/msg/Empty.msg](http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Empty.html)         | Triggers the robot to stand down                                                                        |
 
-#### Published Topics
+### 📤 Published Topics <a id="published-topics"></a>
 
 | Topic name       | Message Type                                                                                              | Description                                                                  |
 | ---------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -122,7 +119,7 @@ ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_para
 | `/bms_state`     | [unitree_ros/msg/bms.msg](https://github.com/snt-arg/unitree_ros/blob/main/msg/BmsState.msg)              | The battery state received from the robot is being published to this topic.  |
 | `/sensor_ranges` | [unitree_ros/msg/SensorRanges.msg](https://github.com/snt-arg/unitree_ros/blob/main/msg/SensorRanges.msg) | The battery state received from the robot is being published to this topic.  |
 
-## ROS Parameters
+### 🔧 ROS Parameters <a id="ros-parameters"></a>
 
 | Parameter Name                | Default value   | Description                                                                                              |
 | ----------------------------- | --------------- | -------------------------------------------------------------------------------------------------------- |
@@ -139,58 +136,58 @@ ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_para
 | `use_obstacle_avoidance`      | false           | Enables (true) or disables (false) the robot obstacle avoidance.                                         |
 | `low_batt_shutdown_threshold` | 20              | Battery threshold for when to stop the robot from moving, in case the battery is below                   |
 
-## Features
+## 🛠️ Features <a id="features"></a>
 
 > [!INFO]
 > In the next version, joint states will also be available.
 
-### Robot LED statuses
+### 💡 Robot LED statuses <a id="robot-led-statuses"></a>
 
 The robot has a few predetermined LED statuses, which are useful to give some information to
 anyone using the robot.
 The following statuses are available:
 
-- **Green Light**: Ready status
+- 🟢 **Green Light**: Ready status
 
     <img src="./docs/ready_status.gif" width="150" height="150"/>
 
-- **White Light**: Idle status
+- ⚪️ **White Light**: Idle status
 
     <img src="./docs/idle_status.gif" width="150" height="150"/>
 
-- **Blue Light**: Moving status
+- 🔵 **Blue Light**: Moving status
 
     <img src="./docs/moving_status.gif" width="150" height="150"/>
 
-- **Yellow Light**: Low battery _(< 30 %)_
+- 🟡 **Yellow Light**: Low battery _(< 30 %)_
 
     <img src="./docs/low_battery_status.gif" width="150" height="150"/>
 
-### Low Battery Protection
+### 🪫 Low Battery Protection <a id="low-battery-protection"></a>
 
 By specifying a low battery threshold using the parameters file (`low_batt_shutdown_threshold`), the driver will stop the robot
 from moving and will stand it down. _By default, the low battery threshold value is set to 20%._
 
-### Obstacle Avoidance
+### 🚧 Obstacle Avoidance <a id="low-battery-protection"></a>
 
 The robot has an obstacle avoidance mode. However, this mode is not enabled by default. Therefore,
 this driver allows you to enable it using the parameters file (`use_obstacle_avoidance`). _By default, this is
 set to false_
 
-## Related Packages
+## 🔗 Related Packages <a id="related-packages"></a>
 
 - [unitree_ros_to_real](https://github.com/unitreerobotics/unitree_ros_to_real)
 
-## License
+## 🔑 License <a id="related-packages"></a>
 
 This project is licensed under the SnT academic license - see the [LICENSE](https://github.com/snt-arg/unitree_ros/blob/main/LICENSE) for more details.
 
-## Contributions
+## 👏 Contributions <a id="contributions"></a>
 
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests,
 please create a new issue or pull request.
 
-## Credits
+## 🎖️ Credits <a id="credits"></a>
 
 This package was developed for the Autonomous Robotics Group (ARG) from the University of Luxembourg.
 

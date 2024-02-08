@@ -2,6 +2,7 @@
 
 <p align="center">
     <img src="./docs/unitree_go1.png" width="30%"/>
+</p>
 
 ## Description
 
@@ -11,14 +12,8 @@ using ROS topics.
 This package acts has middleware between ROS2 and `unitree_legged_sdk`, which enables
 anyone to control the robot with velocity commands as well as receive back the robot state. Furthermore, additional features are also available such as standing up/down the robot and use head LEDs for some status information.
 
-More of the features can be found [here](#features).
-
 > [!NOTE]
 > Only supports `unitree_legged_sdk` High level commands
-
-</p>
-
-For more information about the different topics this ROS package subscribes to or publishes, please refer to the [ROS Topics](#ros-topics) section.
 
 ## Table of Contents
 

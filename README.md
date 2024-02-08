@@ -13,7 +13,7 @@ anyone to control the robot with velocity commands as well as receive back the r
 
 More of the features can be found [here](#features).
 
-> [!INFO]
+> [!NOTE]
 > Only supports `unitree_legged_sdk` High level commands
 
 </p>
@@ -59,8 +59,8 @@ This package will be available soon in the ROS index. Thus, you can install it u
 sudo apt install ros-[distro]-unitree-ros
 ```
 
-> [!WARNING]
-> If you are using foxy as your ROS distribution, you need to build from source
+> [!IMPORTANT]
+> If you are using **foxy** as your ROS distribution, you need to build from source
 
 ### Installation From Source
 
@@ -82,7 +82,7 @@ colcon build --symlink-install
 source install/setup.bash # or zsh if using the zsh shell!
 ```
 
-After having build the workspace, you should now be able to use the driver to control your robot.
+After having built the workspace, you should now be able to use the driver to control your robot.
 
 ## Usage
 

@@ -2,6 +2,20 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update README.md
+* fix(docs): TOC
+* feat(docs): add emojis
+* refactor(docs): clean description
+* fix(docs): change info alert to note
+* feat(docs): make documentation up to date
+  * Improve description
+  * Add new published topic `/sensor_ranges`
+  * Update bms topic name
+  * Correct dependencies
+* Contributors: Pedro Soares
+
 0.2.1 (2024-02-08)
 ------------------
 * feat(launch): add robot_ip argument for easier change

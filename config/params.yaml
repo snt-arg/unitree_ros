@@ -1,19 +1,19 @@
 unitree_ros_node:
   ros__parameters:
     # namespace
-    ns: ''
+    ns: ""
     # Robot parameters
-    robot_ip: '192.168.123.161' # Change to 192.168.12.1 for WIFI
+    robot_ip: "192.168.123.161" # Change to 192.168.12.1 for WIFI
     robot_target_port: 8082
     # Topic names
-    cmd_vel_topic_name: '/cmd_vel'
-    odom_topic_name: '/odom'
-    imu_topic_name: '/imu'
-    bms_state_topic_name: '/bms_state'
+    cmd_vel_topic_name: "/cmd_vel"
+    odom_topic_name: "/odom"
+    imu_topic_name: "/imu"
+    bms_state_topic_name: "/bms_state"
     # Frame Ids
-    imu_frame_id: 'imu'
-    odom_frame_id: 'odom'
-    odom_child_frame_id: 'base_link'
+    imu_frame_id: "imu"
+    odom_frame_id: "odom"
+    odom_child_frame_id: "base_link"
     # Flags
     use_obstacle_avoidance: false
     low_batt_shutdown_threshold: 20 # battery range is [0-100]%

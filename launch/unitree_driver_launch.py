@@ -3,9 +3,10 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
+from launch.conditions import IfCondition
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, NotEqualsSubstitution
 from launch.actions import OpaqueFunction
 
 
@@ -15,39 +16,23 @@ def generate_launch_description():
     params_file_arg = DeclareLaunchArgument(
         "params_file", default_value=str(default_param_file)
     )
-    unitree_driver_function = OpaqueFunction(function=launch_unitree_driver)
+    robot_ip_arg = DeclareLaunchArgument("robot_ip", default_value=str(""))
 
-    return LaunchDescription([params_file_arg, unitree_driver_function])
+    return LaunchDescription(
+        [params_file_arg, robot_ip_arg, launch_unitree_driver()]
+    )
 
 
-def launch_unitree_driver(context, *args, **kwargs):
+def launch_unitree_driver():
     params_file = LaunchConfiguration("params_file")
+    robot_ip = LaunchConfiguration("robot_ip")
 
     unitree_driver_node = Node(
         package="unitree_ros",
         executable="unitree_driver",
-        parameters=[params_file],
+        parameters=[params_file, {"robot_ip": robot_ip}],
         output="screen",
+        condition=IfCondition(NotEqualsSubstitution(robot_ip, "")),
     )
 
-    t_baselink_ossensor = Node(
-        package="tf2_ros",
-        executable="static_transform_publisher",
-        arguments=[
-            "0",
-            "-0.02",
-            "0.20",
-            "0",
-            "0",
-            "0",
-            "1",
-            "base_link",
-            "os_sensor",
-        ],
-        output="screen",
-    )
-
-    return [
-        unitree_driver_node,
-        t_baselink_ossensor,
-    ]
+    return unitree_driver_node

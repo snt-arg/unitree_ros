@@ -2,8 +2,8 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2024-02-08)
+------------------
 * Update README.md
 * fix(docs): TOC
 * feat(docs): add emojis

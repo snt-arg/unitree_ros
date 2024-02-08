@@ -2,6 +2,22 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix(driver): quaternion has been corrected
+* style(config): apply formatter
+* refactor(docs): remove instructions for only foxy distro
+* chore: update unitree sdk submodule (`#15 <https://github.com/snt-arg/unitree_ros/issues/15>`_)
+* feat(docs): add build status for ros distros
+* feat(actions): add workflow names
+* feat(actions): move each distro build to separate workflows
+* feat(ci): add humble and iron docker images to the pipeline
+* feat(docker): create seperate images for distros humble and iron
+* fix(docker): remove ssh keys from the image
+* fix: add missing includes
+* chore: update submodule to use snt-arg fork
+* Contributors: Pedro Soares
+
 0.1.9 (2024-02-02)
 ------------------
 

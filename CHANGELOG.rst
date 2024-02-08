@@ -2,6 +2,11 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* feat(launch): add robot_ip argument for easier change
+* Contributors: Pedro Soares
+
 0.2.0 (2024-02-08)
 ------------------
 * fix(driver): quaternion has been corrected

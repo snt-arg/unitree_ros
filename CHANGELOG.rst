@@ -2,8 +2,8 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2024-02-08)
+------------------
 * fix(driver): quaternion has been corrected
 * style(config): apply formatter
 * refactor(docs): remove instructions for only foxy distro

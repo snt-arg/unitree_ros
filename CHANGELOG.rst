@@ -2,8 +2,8 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2024-02-08)
+------------------
 * feat(launch): add robot_ip argument for easier change
 * Contributors: Pedro Soares
 

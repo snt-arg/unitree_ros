@@ -141,7 +141,7 @@ ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_para
 
 ## 🛠️ Features <a id="features"></a>
 
-> [!INFO]
+> [!NOTE]
 > In the next version, joint states will also be available.
 
 ### 💡 Robot LED statuses <a id="robot-led-statuses"></a>

@@ -1,6 +1,6 @@
 # 🐕 Go1 ROS2 Driver
 
-A ROS2 package which can be used to control the legged robot **Unitree Go1**
+A ROS2 package which can be used to control the legged robot **Unitree Go1 Edu**
 using ROS topics.
 
 This package acts has middleware between ROS2 and `unitree_legged_sdk`, which enables

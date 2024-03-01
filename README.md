@@ -30,7 +30,9 @@ anyone to control the robot with velocity commands as well as receive back the r
   - [🪫 Low Battery Protection](#low-battery-protection)
   - [🚧 Obstacle Avoidance](#obstacle-avoidance)
 - [🔗 Related Packages](#related-packages)
-- [🔑 License](#license)
+- [🔑 License](#license)This project is licensed under the SnT academic license - see the LICENSE for more details.
+
+
 - [👏 Contributions](#contributions)
 - [🎖️ Credits](#credits)
     - [Maintainers](#maintainers)
@@ -68,7 +70,9 @@ cd ~/unitree_ws/src
 git clone --recurse-submodules https://github.com/snt-arg/unitree_ros.git
 ```
 
-Once you have cloned this repository, you will need to build it using Colcon.
+Once you have cloned this repository, you will need to build it using Colcon.This project is licensed under the SnT academic license - see the LICENSE for more details.
+
+
 
 ```sh
 cd ~/unitree_ws
@@ -181,9 +185,9 @@ set to false_
 
 - [unitree_ros_to_real](https://github.com/unitreerobotics/unitree_ros_to_real)
 
-## 🔑 License <a id="related-packages"></a>
+## 🔑 License <a id="license"></a>
 
-This project is licensed under the SnT academic license - see the [LICENSE](https://github.com/snt-arg/unitree_ros/blob/main/LICENSE) for more details.
+This project is licensed under the GPL-3.0 license - see the [LICENSE](https://github.com/snt-arg/unitree_ros/blob/main/LICENSE) for more details.
 
 ## 👏 Contributions <a id="contributions"></a>
 

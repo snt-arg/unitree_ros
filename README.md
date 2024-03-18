@@ -30,9 +30,7 @@ anyone to control the robot with velocity commands as well as receive back the r
   - [🪫 Low Battery Protection](#low-battery-protection)
   - [🚧 Obstacle Avoidance](#obstacle-avoidance)
 - [🔗 Related Packages](#related-packages)
-- [🔑 License](#license)This project is licensed under the SnT academic license - see the LICENSE for more details.
-
-
+- [🔑 License](#license)
 - [👏 Contributions](#contributions)
 - [🎖️ Credits](#credits)
     - [Maintainers](#maintainers)
@@ -70,8 +68,7 @@ cd ~/unitree_ws/src
 git clone --recurse-submodules https://github.com/snt-arg/unitree_ros.git
 ```
 
-Once you have cloned this repository, you will need to build it using Colcon.This project is licensed under the SnT academic license - see the LICENSE for more details.
-
+Once you have cloned this repository, you will need to build it using Colcon.
 
 
 ```sh
@@ -104,7 +101,7 @@ source ~/unitree_ws/install/setup.bash # or zsh if using the zsh shell!
 ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_params_file"
 ```
 
-> [!INFO]
+> [!NOTE]
 > In case, you want to change some of the other parameters available, such as the topic names, then you need to use the `config/params.yaml` file for that.
 
 ## 🤖 ROS Related <a id="ros-related"></a>
@@ -175,7 +172,7 @@ The following statuses are available:
 By specifying a low battery threshold using the parameters file (`low_batt_shutdown_threshold`), the driver will stop the robot
 from moving and will stand it down. _By default, the low battery threshold value is set to 20%._
 
-### 🚧 Obstacle Avoidance <a id="low-battery-protection"></a>
+### 🚧 Obstacle Avoidance <a id="obstacle-avoidance"></a>
 
 The robot has an obstacle avoidance mode. However, this mode is not enabled by default. Therefore,
 this driver allows you to enable it using the parameters file (`use_obstacle_avoidance`). _By default, this is

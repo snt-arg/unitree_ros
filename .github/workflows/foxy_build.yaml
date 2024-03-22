@@ -1,6 +1,9 @@
 name: foxy
 
-on: [push]
+on:
+  push:
+    branches:
+      - foxy
 jobs:
   build_on_foxy_distro:
     runs-on: ubuntu-latest

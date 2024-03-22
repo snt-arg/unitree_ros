@@ -81,9 +81,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 
 add_executable(unitree_driver src/unitree_ros_node.cpp ${SOURCES})
-target_link_libraries(unitree_driver ${EXTRA_LIBS})
 ament_target_dependencies(unitree_driver ${DEPENDENCIES})
-rosidl_target_interfaces(unitree_driver ${PROJECT_NAME} "rosidl_typesupport_cpp")
+rosidl_get_typesupport_target(cpp_typesupport_target
+  ${PROJECT_NAME} rosidl_typesupport_cpp)
+target_link_libraries(unitree_driver "${cpp_typesupport_target}" ${EXTRA_LIBS})
 
 
 

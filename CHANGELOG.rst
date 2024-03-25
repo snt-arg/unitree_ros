@@ -2,6 +2,30 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix: only make foxy CI run on the foxy branch
+* chore: merge changes made in foxy branch
+* build: fix deprecation warning
+* build: add boost build dependency
+* build: add missing depdendencies for tf2 in package.xml
+* chore: change submodule url to https
+* Merge pull request `#19 <https://github.com/snt-arg/unitree_ros/issues/19>`_ from snt-arg/PedroS235-patch-3
+  docs: fix some miscellaneous typos
+* docs: fix some miscellaneous typos
+* Update README.md
+* Merge pull request `#18 <https://github.com/snt-arg/unitree_ros/issues/18>`_ from snt-arg/PedroS235-patch-2
+  chore: update license to GPL
+* chore: update license to GPL
+* Merge pull request `#17 <https://github.com/snt-arg/unitree_ros/issues/17>`_ from snt-arg/feature/license
+  [Misc] Update license to GPLv3
+* [Misc] Update license to GPLv3
+* Merge pull request `#16 <https://github.com/snt-arg/unitree_ros/issues/16>`_ from snt-arg/PedroS235-patch-1
+  docs(fix): specify the unitree go1 edu version
+* docs(fix): specify the unitree go1 edu version
+* Update README.md
+* Contributors: Hriday Bavle, Pedro Soares
+
 1.0.0 (2024-02-08)
 ------------------
 * Update README.md

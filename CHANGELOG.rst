@@ -2,8 +2,8 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2024-03-25)
+------------------
 * fix: only make foxy CI run on the foxy branch
 * chore: merge changes made in foxy branch
 * build: fix deprecation warning

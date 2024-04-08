@@ -48,7 +48,7 @@ anyone to control the robot with velocity commands as well as receive back the r
 
 ## ⚙️ Installation <a id="installation"></a>
 
-This package will be available soon in the ROS index. Thus, you can install it using `apt` (For now you can install it from source):
+This package is available in the ROS index for both Iron and Humble distributions.
 
 ```bash
 sudo apt install ros-[distro]-unitree-ros

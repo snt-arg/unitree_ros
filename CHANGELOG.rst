@@ -2,8 +2,8 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.1 (2024-04-25)
+------------------
 * Merge pull request `#22 <https://github.com/snt-arg/unitree_ros/issues/22>`_ from snt-arg/dev
   fix: import error (`#21 <https://github.com/snt-arg/unitree_ros/issues/21>`_)
 * fix: import error (`#21 <https://github.com/snt-arg/unitree_ros/issues/21>`_)

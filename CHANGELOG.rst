@@ -2,6 +2,19 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#22 <https://github.com/snt-arg/unitree_ros/issues/22>`_ from snt-arg/dev
+  fix: import error (`#21 <https://github.com/snt-arg/unitree_ros/issues/21>`_)
+* fix: import error (`#21 <https://github.com/snt-arg/unitree_ros/issues/21>`_)
+  This commit fixes issue (`#21 <https://github.com/snt-arg/unitree_ros/issues/21>`_) and changes the way we use the launch
+  file. Now we only need use wifi:=true instead of passing the robot ip.
+* chore: update gitignore to conform ros2 development
+* Merge pull request `#20 <https://github.com/snt-arg/unitree_ros/issues/20>`_ from snt-arg/PedroS235-patch-1
+  docs: update installation with apt
+* docs: update installation with apt
+* Contributors: Pedro Soares
+
 1.1.0 (2024-03-25)
 ------------------
 * fix: only make foxy CI run on the foxy branch

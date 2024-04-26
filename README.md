@@ -103,7 +103,7 @@ In case you prefer to modify more parameters, you can do so by passing the param
 ```bash
 ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_params_file" #wifi:=true/false
 ```
-[!IMPORTANT]
+> [!IMPORTANT]
 > In case you are using the `apt` package, the commands will not yet be available since the fixes made were not yet synced. Therefore, for now you can use the following command: `ros2 run unitree_ros unitree_driver` and for the Wi-Fi connection use `ros2 run unitree_ros unitree_driver --ros-args -p robot_ip:="192.168.12.1"`.
 
 ## 🤖 ROS Related <a id="ros-related"></a>

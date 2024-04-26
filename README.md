@@ -82,27 +82,29 @@ After having built the workspace, you should now be able to use the driver to co
 
 ## 🚀 Usage <a id="usage"></a>
 
-Before using the driver, you will need to make a decision whether you want to control the robot
-using a Wi-Fi connection or a wired connection. In case you go for a wired connection, you won't need
-to do anything. In case you want to use the Wi-Fi connection, there are 2 options:
+You can use this driver wired or with a Wi-Fi connection. By default, it is set to use the wired connection.
 
-1. You can simply launch the driver and passing the `robot_ip` argument:
+To launch the driver, you can use the launch file available. For a wired connection use the following command:
 
 ```bash
-source ~/unitree_ws/install/setup.bash # or zsh if using the zsh shell!
-ros2 launch unitree_ros unitree_driver_launch.py robot_ip:="192.168.12.1"
+ros2 launch unitree_ros unitree_driver_launch.py
 ```
 
-2. A configuration file is also available under `config/params.yaml`. You can change
-   the `robot_ip` there too:
-
+For a Wi-Fi connection use the following command:
 ```bash
-source ~/unitree_ws/install/setup.bash # or zsh if using the zsh shell!
-ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_params_file"
+ros2 launch unitree_ros unitree_driver_launch.py wifi:=true
 ```
+
+In case you prefer to modify more parameters, you can do so by passing the parameters file. The default parameters can be found in `config/params.yaml` or [here](#ros-parameters).
 
 > [!NOTE]
-> In case, you want to change some of the other parameters available, such as the topic names, then you need to use the `config/params.yaml` file for that.
+> For the moment, in case you want to use Wi-Fi, you will need to set the wifi argument as above in addition to the parameter file.
+
+```bash
+ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_params_file" #wifi:=true/false
+```
+[!IMPORTANT]
+> In case you are using the `apt` package, the commands will not yet be available since the fixes made were not yet synced. Therefore, for now you can use the following command: `ros2 run unitree_ros unitree_driver` and for the Wi-Fi connection use `ros2 run unitree_ros unitree_driver --ros-args -p robot_ip:="192.168.12.1"`.
 
 ## 🤖 ROS Related <a id="ros-related"></a>
 

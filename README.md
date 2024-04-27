@@ -1,4 +1,6 @@
-# 🐕 Go1 ROS2 Driver
+<div align="center"> 
+    <h1>🐕 Unitree Go1 ROS2 Driver</h1>
+</div>
 
 A ROS2 package which can be used to control the legged robot **Unitree Go1 Edu**
 using ROS topics.

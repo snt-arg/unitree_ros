@@ -5,7 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends libtool \
-    wget nano vim build-essential git python3 python3-pip python3-vcstool git libboost-all-dev
+    wget nano vim build-essential git python3 python3-pip python3-vcstool git \
+    iputils-ping libboost-all-dev
 
 WORKDIR /root/unitree_ws/src
 RUN git clone --recurse-submodules https://github.com/snt-arg/unitree_ros.git

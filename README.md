@@ -46,7 +46,6 @@ anyone to control the robot with velocity commands as well as receive back the r
 | ---------- | --------------------------------------------------------------------------------------------- |
 | **Iron**   | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/iron_build.yaml/badge.svg)   |
 | **Humble** | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/humble_build.yaml/badge.svg) |
-| **Foxy**   | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/foxy_build.yaml/badge.svg)   |
 
 ## ⚙️ Installation <a id="installation"></a>
 

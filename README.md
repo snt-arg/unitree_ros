@@ -1,9 +1,11 @@
 <div align="center"> 
     <h1>🐕 Unitree Go1 ROS2 Driver</h1>
-</div>
+    <a href="https://github.com/snt-arg/unitree_ros/actions/workflows/humble_ci.yaml"><img src="https://github.com/snt-arg/unitree_ros/actions/workflows/humble_ci.yaml/badge.svg" /></a>
+    <a href="https://github.com/snt-arg/unitree_ros/actions/workflows/iron_ci.yaml"><img src="https://github.com/snt-arg/unitree_ros/actions/workflows/iron_ci.yaml/badge.svg" /></a>
+    <a href="https://github.com/snt-arg/unitree_ros/actions/workflows/jazzy_ci.yaml"><img src="https://github.com/snt-arg/unitree_ros/actions/workflows/jazzy_ci.yaml/badge.svg" /></a>
 
-A ROS2 package which can be used to control the legged robot **Unitree Go1 Edu**
-using ROS topics.
+<p>A ROS2 package which can be used to control the legged robot <b>Unitree Go1 Edu</b> using ROS topics.</p>
+</div>
 
 This package acts has middleware between ROS2 and `unitree_legged_sdk`, which enables
 anyone to control the robot with velocity commands as well as receive back the robot state. Furthermore, additional features are also available such as standing up/down the robot and use head LEDs for some status information.
@@ -19,7 +21,6 @@ anyone to control the robot with velocity commands as well as receive back the r
 
 <!--toc:start-->
 
-- [✅ ROS Distro Build Status](#ros-distro-build-status)
 - [⚙️ Installation](#installation)
   - [📦 Installation From Source](#installation-from-source)
 - [🚀 Usage](#usage)
@@ -39,13 +40,6 @@ anyone to control the robot with velocity commands as well as receive back the r
   - [Third-party Assets](#third-party-assets)
 
 <!--toc:end-->
-
-## ✅ ROS Distro Build Status <a id="ros-distro-build-status"></a>
-
-| ROS Distro | Status                                                                                        |
-| ---------- | --------------------------------------------------------------------------------------------- |
-| **Iron**   | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/iron_build.yaml/badge.svg)   |
-| **Humble** | ![iron](https://github.com/snt-arg/unitree_ros/actions/workflows/humble_build.yaml/badge.svg) |
 
 ## ⚙️ Installation <a id="installation"></a>
 

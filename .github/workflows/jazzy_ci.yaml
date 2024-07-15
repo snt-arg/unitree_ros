@@ -12,7 +12,7 @@ jobs:
       - name: Setup ROS2
         uses: ros-tooling/setup-ros@0.7.7
         with:
-          # use-ros2-testing: true
+          use-ros2-testing: true
           required-ros-distributions: jazzy
 
       - name: Checkout Repository with submodules

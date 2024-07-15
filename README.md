@@ -35,8 +35,8 @@ anyone to control the robot with velocity commands as well as receive back the r
 - [🔑 License](#license)
 - [👏 Contributions](#contributions)
 - [🎖️ Credits](#credits)
-    - [Maintainers](#maintainers)
-    - [Third-party Assets](#third-party-assets)
+  - [Maintainers](#maintainers)
+  - [Third-party Assets](#third-party-assets)
 
 <!--toc:end-->
 
@@ -71,7 +71,6 @@ git clone --recurse-submodules https://github.com/snt-arg/unitree_ros.git
 
 Once you have cloned this repository, you will need to build it using Colcon.
 
-
 ```sh
 cd ~/unitree_ws
 source /opt/ros/[ros-distro]/setup.bash # or zsh if using the zsh shell!
@@ -92,20 +91,16 @@ ros2 launch unitree_ros unitree_driver_launch.py
 ```
 
 For a Wi-Fi connection use the following command:
+
 ```bash
 ros2 launch unitree_ros unitree_driver_launch.py wifi:=true
 ```
 
 In case you prefer to modify more parameters, you can do so by passing the parameters file. The default parameters can be found in `config/params.yaml` or [here](#ros-parameters).
 
-> [!NOTE]
-> For the moment, in case you want to use Wi-Fi, you will need to set the wifi argument as above in addition to the parameter file.
-
 ```bash
 ros2 launch unitree_ros unitree_driver_launch.py params_file:="path_to_your_params_file" #wifi:=true/false
 ```
-> [!IMPORTANT]
-> In case you are using the `apt` package, the commands will not yet be available since the fixes made were not yet synced. Therefore, for now you can use the following command: `ros2 run unitree_ros unitree_driver` and for the Wi-Fi connection use `ros2 run unitree_ros unitree_driver --ros-args -p robot_ip:="192.168.12.1"`.
 
 ## 🤖 ROS Related <a id="ros-related"></a>
 

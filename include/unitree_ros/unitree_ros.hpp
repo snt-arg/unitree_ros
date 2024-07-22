@@ -36,8 +36,10 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #include <geometry_msgs/msg/twist.hpp>
 #include <memory>
 #include <nav_msgs/msg/odometry.hpp>
+#include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
 #include <std_msgs/msg/empty.hpp>
 #include <std_msgs/msg/u_int8_multi_array.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
@@ -60,6 +62,7 @@ class UnitreeRosNode : public rclcpp::Node {
     std::string imu_topic_name_ = ns_ + "/imu";
     std::string bms_topic_name_ = ns_ + "/bms";
     std::string sensor_ranges_topic_name = ns_ + "/sensor_ranges";
+    std::string joint_states_topic_name = ns_ + "/joint_states";
 
     // Frame Ids
     std::string odom_frame_id_ = ns_ + "odom";
@@ -71,6 +74,7 @@ class UnitreeRosNode : public rclcpp::Node {
     rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub_;
     rclcpp::Publisher<unitree_ros::msg::BmsState>::SharedPtr bms_pub_;
     rclcpp::Publisher<unitree_ros::msg::SensorRanges>::SharedPtr sensor_ranges_pub_;
+    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_states_pub_;
 
     // Subscriptions
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
@@ -126,6 +130,7 @@ class UnitreeRosNode : public rclcpp::Node {
     void publish_bms_();
     void publish_sensor_ranges_();
     void publish_odom_tf_(rclcpp::Time time, odom_t odom);
+    void publish_joint_states_(rclcpp::Time time);
 
     void apply_namespace_to_topic_names_();
 };

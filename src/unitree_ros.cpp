@@ -104,6 +104,8 @@ void UnitreeRosNode::init_publishers_() {
     bms_pub_ = this->create_publisher<unitree_ros::msg::BmsState>(bms_topic_name_, qos);
     sensor_ranges_pub_ = this->create_publisher<unitree_ros::msg::SensorRanges>(
         sensor_ranges_topic_name, qos);
+    joint_states_pub_ = this->create_publisher<sensor_msgs::msg::JointState>(
+        joint_states_topic_name, qos);
 
     RCLCPP_INFO(get_logger(), "Finished initializing ROS publishers!");
 }
@@ -151,6 +153,7 @@ void UnitreeRosNode::robot_state_callback_() {
     publish_bms_();
     publish_sensor_ranges_();
     publish_odom_(now);
+    publish_joint_states_(now);
 }
 
 void UnitreeRosNode::cmd_vel_reset_callback_() {
@@ -224,6 +227,13 @@ void UnitreeRosNode::publish_odom_tf_(rclcpp::Time time, odom_t odom) {
     tf_broadcaster_->sendTransform(transform);
 }
 
+void UnitreeRosNode::publish_joint_states_(rclcpp::Time time) {
+    sensor_msgs::msg::JointState joint_state_msg;
+    joint_state_msg.header.stamp = time;
+    serialize(joint_state_msg, unitree_driver_->get_joint_states());
+    joint_states_pub_->publish(joint_state_msg);
+}
+
 // -----------------------------------------------------------------------------
 // -                              ROS Parameters                               -
 // -----------------------------------------------------------------------------
@@ -248,11 +258,13 @@ void UnitreeRosNode::read_parameters_() {
     declare_parameter<std::string>("imu_topic_name", imu_topic_name_);
     declare_parameter<std::string>("odom_topic_name", odom_topic_name_);
     declare_parameter<std::string>("bms_state_topic_name", bms_topic_name_);
+    declare_parameter<std::string>("joint_states_topic_name", joint_states_topic_name);
     // --------------------------------------------------------
     get_parameter("cmd_vel_topic_name", cmd_vel_topic_name_);
     get_parameter("odom_topic_name", odom_topic_name_);
     get_parameter("imu_topic_name", imu_topic_name_);
     get_parameter("bms_state_topic_name", bms_topic_name_);
+    get_parameter("joint_states_topic_name", joint_states_topic_name);
 
     // Frame Ids
     declare_parameter<std::string>("imu_frame_id", imu_frame_id_);

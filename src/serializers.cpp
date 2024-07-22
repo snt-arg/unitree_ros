@@ -101,7 +101,7 @@ void serialize(sensor_msgs::msg::JointState& msg,
     msg.velocity.resize(num_joints);
     msg.effort.resize(num_joints);
 
-    for (int leg = 0; leg < 4; leg++) {
+    for (int leg = 0; leg < num_joints; leg += 3) {
         for (int joint = 0; joint < 3; joint++) {
             int idx = leg + joint;
             msg.position[idx] = motor_states[idx].q;

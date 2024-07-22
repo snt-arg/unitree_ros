@@ -10,6 +10,7 @@ unitree_ros_node:
     odom_topic_name: "/odom"
     imu_topic_name: "/imu"
     bms_state_topic_name: "/bms_state"
+    joint_states_topic_name: "/joint_states"
     # Frame Ids
     imu_frame_id: "imu"
     odom_frame_id: "odom"

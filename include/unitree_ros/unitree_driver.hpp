@@ -33,6 +33,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #include <FaceLightClient.h>
 #include <unitree_legged_sdk/unitree_legged_sdk.h>
 
+#include <array>
 #include <atomic>
 #include <memory>
 #include <thread>
@@ -148,6 +149,18 @@ class UnitreeDriver {
      * @return UNITREE_LEGGED_SDK::BMS: The BMS data from the robot
      */
     UNITREE_LEGGED_SDK::BmsState get_bms();
+
+    /**
+     * @brief Retrieves the state of each joint of the robot
+     *
+     *
+     * @return std::array<UNITREE_LEGGED_SDK::MotorState, 20>: The joint states of the
+     * robot. [ fr_hip, fr_tight, fr_calf,
+     *          fl_hip, fl_tight, fl_calf,
+     *          br_hip, br_tight, br_calf,
+     *          bl_hip, bl_tight, bl_calf ]
+     */
+    std::array<UNITREE_LEGGED_SDK::MotorState, 12> get_joint_states();
 
     /**
      * @brief Retrieves the distances comming from the radar sensors from the front and

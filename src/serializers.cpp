@@ -27,6 +27,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 */
 
+#include <iostream>
 #include <unitree_ros/serializers.hpp>
 
 void serialize(nav_msgs::msg::Odometry& msg, const odom_t odom) {
@@ -78,4 +79,34 @@ void serialize(unitree_ros::msg::SensorRanges& msg, const sensor_ranges_t radar)
     msg.front = radar.front;
     msg.left = radar.left;
     msg.right = radar.right;
+}
+
+void serialize(sensor_msgs::msg::JointState& msg,
+               const std::array<UNITREE_LEGGED_SDK::MotorState, 12> motor_states) {
+    msg.name = {"front_right_hip",
+                "front_right_tight",
+                "front_right_calf",
+                "front_left_hip",
+                "front_left_tight",
+                "front_left_calf",
+                "back_right_hip",
+                "back_right_tight",
+                "back_right_calf",
+                "back_left_hip",
+                "back_left_tight",
+                "back_left_calf"};
+
+    int num_joints = 12;
+    msg.position.resize(num_joints);
+    msg.velocity.resize(num_joints);
+    msg.effort.resize(num_joints);
+
+    for (int leg = 0; leg < num_joints; leg += 3) {
+        for (int joint = 0; joint < 3; joint++) {
+            int idx = leg + joint;
+            msg.position[idx] = motor_states[idx].q;
+            msg.velocity[idx] = motor_states[idx].dq;
+            msg.effort[idx] = motor_states[idx].tauEst;
+        }
+    }
 }

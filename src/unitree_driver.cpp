@@ -29,6 +29,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 
 #include <unistd.h>
 
+#include <array>
 #include <cstdint>
 #include <iostream>
 #include <ostream>
@@ -95,6 +96,16 @@ sensor_ranges_t UnitreeDriver::get_radar_ranges() {
 UNITREE_LEGGED_SDK::IMU UnitreeDriver::get_imu() { return high_state_.imu; }
 
 UNITREE_LEGGED_SDK::BmsState UnitreeDriver::get_bms() { return high_state_.bms; }
+
+std::array<UNITREE_LEGGED_SDK::MotorState, 12> UnitreeDriver::get_joint_states() {
+    std::array<UNITREE_LEGGED_SDK::MotorState, 12> joint_states;
+
+    for (int i = 0; i < 12; i++) {
+        joint_states[i] = high_state_.motorState[i];
+    }
+
+    return joint_states;
+}
 
 uint8_t UnitreeDriver::get_battery_percentage() { return high_state_.bms.SOC; }
 

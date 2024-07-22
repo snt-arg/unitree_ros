@@ -30,10 +30,13 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #ifndef SERIALIZERS_HPP
 #define SERIALIZERS_HPP
 
+#include <unitree_legged_sdk/comm.h>
+
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
 #include <unitree_ros/common_defines.hpp>
 #include <unitree_ros/msg/bms_state.hpp>
 #include <unitree_ros/msg/sensor_ranges.hpp>
@@ -44,5 +47,7 @@ void serialize(nav_msgs::msg::Odometry& msg, const odom_t odom);
 void serialize(sensor_msgs::msg::Imu& msg, const UNITREE_LEGGED_SDK::IMU imu);
 void serialize(unitree_ros::msg::BmsState& msg, const UNITREE_LEGGED_SDK::BmsState bms);
 void serialize(unitree_ros::msg::SensorRanges& msg, const sensor_ranges_t ranges);
+void serialize(sensor_msgs::msg::JointState& msg,
+               const std::array<UNITREE_LEGGED_SDK::MotorState, 12> motor_states);
 
 #endif  // !#ifndef SERIALIZERS_HPP

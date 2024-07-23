@@ -2,8 +2,8 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2024-07-23)
+------------------
 * Merge pull request `#30 <https://github.com/snt-arg/unitree_ros/issues/30>`_ from snt-arg/feat/pub_joint_states
   Feature: Publish Joint states of robot (`#24 <https://github.com/snt-arg/unitree_ros/issues/24>`_)
 * fix: joint indexes

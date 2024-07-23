@@ -2,6 +2,41 @@
 Changelog for package unitree_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#30 <https://github.com/snt-arg/unitree_ros/issues/30>`_ from snt-arg/feat/pub_joint_states
+  Feature: Publish Joint states of robot (`#24 <https://github.com/snt-arg/unitree_ros/issues/24>`_)
+* fix: joint indexes
+* feat(config): add default topic name for joint states
+* feat(driver): create function to retrive motor states
+* feat: create serializer function to create join_state msg
+* feat: create publisher for joint_state
+* feat(ci): add a specific container image to each ci
+* fix(ci/jazzy): add container with ubuntu noble
+* docs: update location of build status
+* chore(ci/jazzy): use relative version
+* fix(ci/jazzy): use ros2-testing
+* fix(ci/jazzy): remove v from the ros-setup action version
+* fix(ci): bump setup-ros action to 0.7.7 which fixes a bug
+* chore(ci): update workflow names and remove tests
+* feat(ci): include ci for ros jazzy
+* chore(ci): rename workflows
+* chore(ci): upgrade to ros-tooling actions
+* chore(ci): bump checkout actions to v4 and fix setup-ros distributions
+* chore(ci): make use of ros-tooling
+* docs: update usage section
+* chore: add copyright notice to all source files
+* Merge pull request `#28 <https://github.com/snt-arg/unitree_ros/issues/28>`_ from snt-arg/PedroS235-patch-1
+  docs: remove foxy from being shown in status
+* docs: remove foxy from being shown in status
+* fix(docker): add missing dependency to be installed (`#23 <https://github.com/snt-arg/unitree_ros/issues/23>`_)
+* Update issue and feature templates
+* docs: update title
+* docs: add missing > to the important alert
+* docs: update usage instructions
+* chore: update image
+* Contributors: Pedro Soares
+
 1.1.1 (2024-04-25)
 ------------------
 * Merge pull request `#22 <https://github.com/snt-arg/unitree_ros/issues/22>`_ from snt-arg/dev

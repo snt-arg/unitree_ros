@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:jammy
+      image: rostooling/setup-ros-docker:ubuntu-jammy-ros-iron-ros-base-latest
     steps:
       - name: Setup ROS2
         uses: ros-tooling/setup-ros@v0.7

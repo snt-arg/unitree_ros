@@ -10,11 +10,12 @@
 This package acts has middleware between ROS2 and `unitree_legged_sdk`, which enables
 anyone to control the robot with velocity commands as well as receive back the robot state. Furthermore, additional features are also available such as standing up/down the robot and use head LEDs for some status information.
 
-> [!NOTE]
-> Only supports `unitree_legged_sdk` High level commands
+!!! NOTE
+
+    Only supports `unitree_legged_sdk` High level commands
 
 <p align="center">
-    <img src="./docs/assets/unitree_go1.png" width="30%"/>
+    <img src="./assets/unitree_go1.png" width="30%"/>
 </p>
 
 ## 📜 Table of Contents
@@ -145,19 +146,19 @@ The following statuses are available:
 
 - 🟢 **Green Light**: Ready status
 
-    <img src="./docs/assets/ready_status.gif" width="150" height="150"/>
+    <img src="./assets/ready_status.gif" width="150" height="150"/>
 
 - ⚪️ **White Light**: Idle status
 
-    <img src="./docs/assets/idle_status.gif" width="150" height="150"/>
+    <img src="./assets/idle_status.gif" width="150" height="150"/>
 
 - 🔵 **Blue Light**: Moving status
 
-    <img src="./docs/assets/moving_status.gif" width="150" height="150"/>
+    <img src="./assets/moving_status.gif" width="150" height="150"/>
 
 - 🟡 **Yellow Light**: Low battery _(< 30 %)_
 
-    <img src="./docs/assets/low_battery_status.gif" width="150" height="150"/>
+    <img src="./assets/low_battery_status.gif" width="150" height="150"/>
 
 ### 🪫 Low Battery Protection <a id="low-battery-protection"></a>
 

@@ -1,7 +1,7 @@
-site_name: Tello Suite
-site_url: https://snt-arg.github.io/tello_suite/
-repo_url: https://github.com/snt-arg/tello_suite
-repo_name: snt-arg/tello_suite
+site_name: Unitree ROS
+site_url: https://snt-arg.github.io/unitree_ros/
+repo_url: https://github.com/snt-arg/unitree_ros
+repo_name: snt-arg/unitree_ros
 theme:
   features:
     - content.code.copy
@@ -10,13 +10,13 @@ theme:
   icon:
     repo: fontawesome/brands/github
   name: material
-  palette: 
+  palette:
     # Dark Mode
     - scheme: slate
-      primary: black 
+      primary: black
       accent: teal
       toggle:
-        icon: material/weather-sunny 
+        icon: material/weather-sunny
         name: Switch to light mode
 
     # Light Mode

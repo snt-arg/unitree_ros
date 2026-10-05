@@ -25,6 +25,9 @@ find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(hardware_interface REQUIRED)
+find_package(controller_manager REQUIRED)
+find_package(pluginlib REQUIRED)
 
 
 # --------------------------------
@@ -46,10 +49,11 @@ SET(EXTRA_LIBS
 SET(SOURCES 
     src/unitree_ros.cpp 
     src/unitree_driver.cpp 
+    src/unitree_driver_lowlevel.cpp
     src/serializers.cpp
 )
 
-SET(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs tf2 tf2_ros)
+SET(DEPENDENCIES rclcpp std_msgs nav_msgs sensor_msgs geometry_msgs tf2 tf2_ros hardware_interface controller_manager pluginlib)
 
 # --------------------------------
 # -      Libraries Section       -
@@ -71,6 +75,11 @@ include_directories(include
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/BmsState.msg"
   "msg/SensorRanges.msg"
+  "msg/MotorCmd.msg"
+  "msg/MotorState.msg"
+  "msg/ImuState.msg"
+  "msg/LowCmd.msg"
+  "msg/LowState.msg"
   DEPENDENCIES builtin_interfaces std_msgs geometry_msgs sensor_msgs nav_msgs
 )
 
@@ -113,6 +122,43 @@ target_link_libraries(unitree_driver PUBLIC
   ${EXTRA_LIBS}
 )
 
+# Low-level driver node
+add_executable(unitree_lowlevel_driver
+  src/unitree_lowlevel_node.cpp
+  src/unitree_driver_lowlevel.cpp
+  src/serializers.cpp
+)
+
+target_link_libraries(unitree_lowlevel_driver PUBLIC
+  "${cpp_typesupport_target}"
+
+  rclcpp::rclcpp
+  ${sensor_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+
+  ${EXTRA_LIBS}
+)
+
+# ros2_control hardware interface plugin
+add_library(unitree_hardware_interface_lib SHARED
+  src/unitree_hardware_interface.cpp
+  src/unitree_driver_lowlevel.cpp
+  src/serializers.cpp
+)
+
+target_link_libraries(unitree_hardware_interface_lib PUBLIC
+  "${cpp_typesupport_target}"
+
+  rclcpp::rclcpp
+  hardware_interface::hardware_interface
+  ${sensor_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+
+  ${EXTRA_LIBS}
+)
+
+pluginlib_export_plugin_description_file(hardware_interface unitree_hardware_interface.xml)
+
 
 
 # -------------------
@@ -131,7 +177,11 @@ install(
 
 install(TARGETS 
   unitree_driver
-  DESTINATION lib/${PROJECT_NAME}
+  unitree_lowlevel_driver
+  unitree_hardware_interface_lib
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
   INCLUDES DESTINATION include
 )
 

@@ -18,6 +18,10 @@
   <depend>nav_msgs</depend>
   <depend>tf2</depend>
   <depend>tf2_ros</depend>
+  <depend>hardware_interface</depend>
+  <depend>controller_manager</depend>
+  <depend>pluginlib</depend>
+  <exec_depend>robot_state_publisher</exec_depend>
 
   <exec_depend>rosidl_default_runtime</exec_depend>
 
@@ -28,5 +32,6 @@
 
   <export>
     <build_type>ament_cmake</build_type>
+    <hardware_interface plugin="${prefix}/unitree_hardware_interface.xml"/>
   </export>
 </package>

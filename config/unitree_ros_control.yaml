@@ -1,0 +1,84 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 500
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+joint_state_broadcaster:
+  ros__parameters:
+    update_rate: 500
+
+joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - FR_hip_joint
+      - FR_thigh_joint
+      - FR_calf_joint
+      - FL_hip_joint
+      - FL_thigh_joint
+      - FL_calf_joint
+      - RR_hip_joint
+      - RR_thigh_joint
+      - RR_calf_joint
+      - RL_hip_joint
+      - RL_thigh_joint
+      - RL_calf_joint
+    
+    command_interfaces:
+      - position
+      - velocity
+    
+    state_interfaces:
+      - position
+      - velocity
+      - effort
+    
+    update_rate: 500
+    
+    allow_partial_joints_goal: false
+    
+    open_loop_control: false
+    
+    allow_integration_in_goal_trajectories: true
+    
+    constraints:
+      stopped_velocity_tolerance: 0.01
+      goal_time: 0.0
+      FR_hip_joint:
+        trajectory: 0.1
+        goal: 0.1
+      FR_thigh_joint:
+        trajectory: 0.1
+        goal: 0.1
+      FR_calf_joint:
+        trajectory: 0.1
+        goal: 0.1
+      FL_hip_joint:
+        trajectory: 0.1
+        goal: 0.1
+      FL_thigh_joint:
+        trajectory: 0.1
+        goal: 0.1
+      FL_calf_joint:
+        trajectory: 0.1
+        goal: 0.1
+      RR_hip_joint:
+        trajectory: 0.1
+        goal: 0.1
+      RR_thigh_joint:
+        trajectory: 0.1
+        goal: 0.1
+      RR_calf_joint:
+        trajectory: 0.1
+        goal: 0.1
+      RL_hip_joint:
+        trajectory: 0.1
+        goal: 0.1
+      RL_thigh_joint:
+        trajectory: 0.1
+        goal: 0.1
+      RL_calf_joint:
+        trajectory: 0.1
+        goal: 0.1

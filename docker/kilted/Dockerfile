@@ -38,7 +38,8 @@ COPY CMakeLists.txt .
 # -----------------------------------------------------------------------------
 WORKDIR /root/unitree_ws
 
-RUN bash -c "\
+RUN apt-get update && \
+    bash -c "\
     source /opt/ros/${ROS_DISTRO}/setup.bash && \
     rosdep update && \
     rosdep install \
@@ -64,6 +65,7 @@ COPY msg/ msg/
 COPY launch/ launch/
 COPY config/ config/
 COPY utils/ utils/
+COPY unitree_hardware_interface.xml .
 
 # -----------------------------------------------------------------------------
 # Build workspace

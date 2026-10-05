@@ -1,0 +1,10 @@
+<library path="unitree_hardware_interface_lib">
+  <class name="unitree_ros/UnitreeHardwareInterface"
+         type="unitree_ros::UnitreeHardwareInterface"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      ROS2 control hardware interface for the Unitree Go1 quadruped robot using the
+      unitree_legged_sdk low-level (LOWLEVEL) UDP interface.
+    </description>
+  </class>
+</library>

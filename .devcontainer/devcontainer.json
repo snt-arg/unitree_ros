@@ -1,0 +1,112 @@
+{
+  "name": "unitree_ros (${localEnv:ROS_DISTRO:kilted})",
+  // -------------------------------------------------------------------------
+  // HOW TO SWITCH ROS 2 VERSION
+  // -------------------------------------------------------------------------
+  // Option A – build arg (recommended, single config):
+  //   1. Change "ROS_DISTRO" in "build.args" below to one of:
+  //      "foxy" | "humble" | "jazzy" | "kilted"
+  //   2. Command Palette → "Dev Containers: Rebuild Container"
+  //   Or set env var before opening VS Code and reload:
+  //      ROS_DISTRO=humble code .
+  //
+  // Option B – docker-compose (alternative):
+  //   1. Comment out the "build" section below
+  //   2. Uncomment the "dockerComposeFile" + "service" section
+  //   3. Set "service" to foxy | humble | jazzy | kilted
+  //   See docker-compose.yml for service definitions.
+  //
+  // CLI override (no edit):
+  //   devcontainer up --workspace-folder . --build-arg ROS_DISTRO=jazzy
+  // -------------------------------------------------------------------------
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      // ← CHANGE THIS to switch distro. Supported: foxy, humble, jazzy, kilted
+      "ROS_DISTRO": "${localEnv:ROS_DISTRO:kilted}"
+    }
+  },
+
+  // --- Uncomment to use docker-compose-based switching instead of build.args ---
+  // "dockerComposeFile": "docker-compose.yml",
+  // "service": "kilted",
+  // "workspaceFolder": "/workspaces/unitree_ros",
+
+  "workspaceFolder": "/workspaces/unitree_ros",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/unitree_ros,type=bind,consistency=cached",
+
+  // Run as non-root user created in Dockerfile
+  "remoteUser": "ros",
+  "updateRemoteUserUID": true,
+
+  // Allow GUI / ROS networking if needed
+  "runArgs": [
+    "--network=host"
+  ],
+
+  // Forward ROS 2 DDS ports (optional, host networking already covers it)
+  // "forwardPorts": [],
+
+  // Mount to persist bash history / ccache (optional)
+  "mounts": [
+    "source=unitree_ros-ccache-${localEnv:ROS_DISTRO:kilted},target=/home/ros/.ccache,type=volume",
+    "source=unitree_ros-bashhistory-${localEnv:ROS_DISTRO:kilted},target=/home/ros/.bash_history,type=volume"
+  ],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "redhat.vscode-yaml",
+        "DotJoshJohnson.xml",
+        "ms-vscode.vscode-serial-monitor",
+        "streetsidesoftware.code-spell-checker",
+        "mhutchie.git-graph",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        // C++ / clang
+        "C_Cpp.intelliSenseMode": "linux-gcc-x64",
+        "C_Cpp.default.cppStandard": "c++17",
+        "C_Cpp.default.cStandard": "c99",
+        "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+        "clangd.path": "/usr/bin/clangd",
+        "files.associations": {
+          "*.h": "cpp"
+        },
+        // CMake
+        "cmake.configureOnOpen": false,
+        "cmake.buildDirectory": "${workspaceFolder}/build",
+        // Python
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        // ROS 2 – point to compile_commands for each built package
+        "ros.distro": "${localEnv:ROS_DISTRO:kilted}",
+        // Terminal – auto-source ROS
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash",
+            "args": ["-l"]
+          }
+        }
+      }
+    }
+  },
+
+  // Install ROS deps + configure environment on first create
+  "onCreateCommand": {
+    "rosdep update (may fail offline)": "sudo rosdep update || true",
+    "install deps": "sudo apt-get update && rosdep install --from-paths . --ignore-src -r -y || sudo rosdep install --from-paths . --ignore-src -r -y --rosdistro ${localEnv:ROS_DISTRO:kilted} || true"
+  },
+
+  "postCreateCommand": "echo 'ROS_DISTRO=${localEnv:ROS_DISTRO:kilted} ready. Run: colcon build --symlink-install' && ls -la",
+
+  // Keep container running
+  "overrideCommand": false,
+  "shutdownAction": "stopContainer"
+}

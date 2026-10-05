@@ -1,0 +1,85 @@
+# ---------------------------------------------------------------------------
+# Alternative: docker-compose based distro switching
+# ---------------------------------------------------------------------------
+# Usage:
+#   1. In devcontainer.json comment out `build` and uncomment:
+#        "dockerComposeFile": "docker-compose.yml",
+#        "service": "kilted",
+#   2. Change `service` to one of: foxy | humble | jazzy | kilted
+#   3. Rebuild:  Command Palette → "Dev Containers: Rebuild Container"
+#
+# Or from CLI without editing devcontainer.json:
+#   # using compose directly (no devcontainer CLI):
+#   ROS_DISTRO=jazzy docker compose run --rm jazzy bash
+#
+# Each service builds the same Dockerfile with a different ROS_DISTRO arg,
+# so Docker layer cache is reused where possible (apt layers differ per
+# Ubuntu base).
+# ---------------------------------------------------------------------------
+
+services:
+  foxy:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        ROS_DISTRO: foxy
+    image: unitree_ros:foxy-dev
+    volumes:
+      - ..:/workspaces/unitree_ros:cached
+      - ccache-foxy:/home/ros/.ccache
+      - bashhistory-foxy:/home/ros/.bash_history
+    command: sleep infinity
+    network_mode: host
+
+  humble:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        ROS_DISTRO: humble
+    image: unitree_ros:humble-dev
+    volumes:
+      - ..:/workspaces/unitree_ros:cached
+      - ccache-humble:/home/ros/.ccache
+      - bashhistory-humble:/home/ros/.bash_history
+    command: sleep infinity
+    network_mode: host
+
+  jazzy:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        ROS_DISTRO: jazzy
+    image: unitree_ros:jazzy-dev
+    volumes:
+      - ..:/workspaces/unitree_ros:cached
+      - ccache-jazzy:/home/ros/.ccache
+      - bashhistory-jazzy:/home/ros/.bash_history
+    command: sleep infinity
+    network_mode: host
+
+  kilted:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        ROS_DISTRO: kilted
+    image: unitree_ros:kilted-dev
+    volumes:
+      - ..:/workspaces/unitree_ros:cached
+      - ccache-kilted:/home/ros/.ccache
+      - bashhistory-kilted:/home/ros/.bash_history
+    command: sleep infinity
+    network_mode: host
+
+volumes:
+  ccache-foxy:
+  ccache-humble:
+  ccache-jazzy:
+  ccache-kilted:
+  bashhistory-foxy:
+  bashhistory-humble:
+  bashhistory-jazzy:
+  bashhistory-kilted:

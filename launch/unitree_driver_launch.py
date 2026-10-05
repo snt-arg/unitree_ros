@@ -1,11 +1,11 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
-
-from launch import LaunchDescription
-from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+
+from launch import LaunchDescription
 
 
 def generate_launch_description():
@@ -23,23 +23,31 @@ def generate_launch_description():
     )
 
     return LaunchDescription(
-        [params_file_arg, use_wifi_arg, OpaqueFunction(function=launch_unitree_driver)]
+        [
+            params_file_arg,
+            use_wifi_arg,
+            OpaqueFunction(function=launch_unitree_driver),
+        ]
     )
 
 
 def launch_unitree_driver(context):
     params_file = LaunchConfiguration("params_file")
     wifi = context.launch_configurations.get("wifi", "false")
+
     if wifi == "true":
         robot_ip = "192.168.12.1"
     else:
         robot_ip = "192.168.123.161"
 
-    unitree_driver_node = Node(
-        package="unitree_ros",
-        executable="unitree_driver",
-        parameters=[params_file, {"robot_ip": robot_ip}],
-        output="screen",
-    )
-
-    return [unitree_driver_node]
+    return [
+        Node(
+            package="unitree_ros",
+            executable="unitree_driver",
+            parameters=[
+                params_file,
+                {"robot_ip": robot_ip},
+            ],
+            output="screen",
+        )
+    ]

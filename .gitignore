@@ -38,3 +38,6 @@ compile_commands.json
 
 # VSCode
 .vscode
+# pixi environments
+.pixi/*
+!.pixi/config.toml

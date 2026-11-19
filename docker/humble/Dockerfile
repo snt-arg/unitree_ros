@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends libtool \
     wget nano vim build-essential git python3 python3-pip python3-vcstool git \
-    iputils-ping libboost-all-dev
+    iputils-ping libboost-all-dev ros-humble-rmw-zenoh-cpp
 
 WORKDIR /root/unitree_ws/src
 RUN git clone --recurse-submodules https://github.com/snt-arg/unitree_ros.git
@@ -17,3 +17,14 @@ RUN . /opt/ros/humble/setup.sh && \
     rosdep install --from-paths src --ignore-src -r -y
 
 WORKDIR /root/unitree_ws/src/unitree_ros
+
+# -----------------------------------------------------------------------------
+# Entrypoint (sources ROS + workspace, then runs the given command)
+# -----------------------------------------------------------------------------
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+WORKDIR /root/unitree_ws
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]

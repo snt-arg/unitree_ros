@@ -1,0 +1,31 @@
+# Top-level Compose file for running the unitree_ros driver.
+#
+# Defaults can be overridden from the environment, for example:
+#   ROS_DISTRO=humble docker compose up --build
+#   PARAMS_FILE=/path/to/params.yaml docker compose up
+#   RMW_IMPLEMENTATION=rmw_fastrtps_cpp docker compose up
+#   WIFI=true docker compose up
+
+include:
+  - path: docker/compose.unitree_ros.yaml
+    environment:
+      ROS_DISTRO: ${ROS_DISTRO:-jazzy}
+      PARAMS_FILE: ${PARAMS_FILE:-./config/params.yaml}
+      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_zenoh_cpp}
+      WIFI: ${WIFI:-false}
+
+services:
+  # Router required by rmw_zenoh_cpp. It can stay running when a different
+  # RMW implementation is selected, since it does not interfere with DDS.
+  zenoh_router:
+    image: unitree_ros:${ROS_DISTRO:-jazzy}
+    environment:
+      ROS_DISTRO: ${ROS_DISTRO:-jazzy}
+    network_mode: host
+    ipc: host
+    command: ["ros2", "run", "rmw_zenoh_cpp", "rmw_zenohd"]
+
+  unitree_ros:
+    depends_on:
+      zenoh_router:
+        condition: service_started

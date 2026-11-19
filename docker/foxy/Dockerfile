@@ -16,3 +16,14 @@ RUN . /opt/ros/foxy/setup.sh && \
     rosdep install --from-paths src --ignore-src -r -y
 
 WORKDIR /root/unitree_ws/src/unitree_ros
+
+# -----------------------------------------------------------------------------
+# Entrypoint (sources ROS + workspace, then runs the given command)
+# -----------------------------------------------------------------------------
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+WORKDIR /root/unitree_ws
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]

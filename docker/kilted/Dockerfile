@@ -20,6 +20,7 @@ RUN apt-get update && \
         python3 \
         python3-pip \
         python3-vcstool \
+        ros-${ROS_DISTRO}-rmw-zenoh-cpp \
         vim \
         wget && \
     rm -rf /var/lib/apt/lists/*
@@ -82,4 +83,13 @@ RUN bash -c "\
 RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /root/.bashrc && \
     echo 'source /root/unitree_ws/install/setup.bash' >> /root/.bashrc
 
+# -----------------------------------------------------------------------------
+# Entrypoint (sources ROS + workspace, then runs the given command)
+# -----------------------------------------------------------------------------
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+WORKDIR /root/unitree_ws
+
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]

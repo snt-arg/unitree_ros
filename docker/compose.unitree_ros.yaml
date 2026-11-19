@@ -1,0 +1,37 @@
+# Reusable Compose definition for the unitree_ros driver.
+#
+# This file only defines the `unitree_ros` service so it can be included by
+# another Compose file (or used directly from the docker/ directory).
+#
+# Optional parameters:
+#   ROS_DISTRO          ROS 2 distribution used to select
+#                       docker/<distro>/Dockerfile and the image tag.
+#                       Default: jazzy
+#   PARAMS_FILE         Host path to the driver parameters file. It is mounted
+#                       read-only at /etc/params.yaml. Default: ../config/params.yaml
+#   RMW_IMPLEMENTATION  ROS middleware implementation.
+#                       Default: rmw_zenoh_cpp
+#   WIFI                Passed to the launch file as wifi:=<value>.
+#                       Default: false
+
+services:
+  unitree_ros:
+    build:
+      context: ..
+      dockerfile: docker/${ROS_DISTRO:-jazzy}/Dockerfile
+      args:
+        ROS_DISTRO: ${ROS_DISTRO:-jazzy}
+    image: unitree_ros:${ROS_DISTRO:-jazzy}
+    environment:
+      ROS_DISTRO: ${ROS_DISTRO:-jazzy}
+      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_zenoh_cpp}
+      WIFI: ${WIFI:-false}
+    volumes:
+      - ${PARAMS_FILE:-../config/params.yaml}:/etc/params.yaml:ro
+    network_mode: host
+    ipc: host
+    working_dir: /root/unitree_ws
+    command: >-
+      ros2 launch unitree_ros unitree_driver_launch.py
+      params_file:=/etc/params.yaml
+      wifi:=${WIFI:-false}
